@@ -1,11 +1,16 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\Middleware\Authenticate;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::resource('event', EventController::class);
+// Route::resource('event', EventController::class)->middleware(Authenticate::class);
+
+// Public: event list (home) and detail
+Route::get('/', [EventController::class, 'index']); //home-list page
+Route::get('/events/{id}', [EventController::class, 'show']); // details page
 
 Route::get('/dashboard', function () {
     return view('dashboard');
