@@ -21,7 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'type',
+        'consented_at'
     ];
+
+    public function events() { return $this->hasMany(Event::class, 'organiser_id');}
+    public function bookings() { return $this->hasMany(Booking::class); }
+
 
     /**
      * The attributes that should be hidden for serialization.
