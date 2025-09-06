@@ -9,8 +9,8 @@ use Illuminate\Auth\Middleware\Authenticate;
 // Route::resource('event', EventController::class)->middleware(Authenticate::class);
 
 // Public: event list (home) and detail
-Route::get('/', [EventController::class, 'index']); //home-list page
-Route::get('/event/{id}', [EventController::class, 'show']); // details page
+Route::get('/', [EventController::class, 'index'])->name('events.index');
+Route::get('/event/{id}', [EventController::class, 'show'])->name('events.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

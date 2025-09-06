@@ -9,16 +9,11 @@
 
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('events.index') ? 'active' : '' }}"
-             href="{{ route('events.index') }}">Find Events</a>
-        </li>
-
         @auth
           @if(auth()->user()->type === 'organiser')
             <li class="nav-item">
               <a class="nav-link {{ request()->routeIs('events.create') ? 'active' : '' }}"
-                 href="{{ route('events.create') }}">Create Event</a>
+                 href="{{ route('events.index') }}">Create Event</a>
             </li>
             <li class="nav-item">
               <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
@@ -27,7 +22,7 @@
           @else
             <li class="nav-item">
               <a class="nav-link {{ request()->routeIs('bookings.index') ? 'active' : '' }}"
-                 href="{{ route('bookings.index') }}">My Bookings</a>
+                 href="{{ route('events.index') }}">My Bookings</a>
             </li>
           @endif
         @endauth
