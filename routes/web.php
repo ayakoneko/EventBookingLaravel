@@ -3,10 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Auth\Middleware\Authenticate;
-
-// Route::resource('event', EventController::class);
-// Route::resource('event', EventController::class)->middleware(Authenticate::class);
+use App\Http\Middleware\EnsureUserIsOrganiser;
+use App\Http\Middleware\EnsureUserIsAttendee;
 
 // Public: event list (home) and detail
 Route::get('/', [EventController::class, 'index'])->name('events.index');
@@ -20,6 +18,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'organiser'])->group(function () {
+    Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+    Route::get('/organiser/dashboard', fn() => view('organiser.dashboard'))->name('organiser.dashboard');
+});
+
+Route::middleware(['auth', 'attendee'])->group(function () {
+    Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
 });
 
 require __DIR__.'/auth.php';

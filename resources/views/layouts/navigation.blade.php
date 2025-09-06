@@ -3,26 +3,32 @@
   <div class="container">
     <a class="navbar-brand" href="{{ route('events.index') }}">EventBooking</a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        @guest {{-- will redirect to login if guest --}}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('events.index') }}">Create Event</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('events.index') }}">Find my tickets</a> {{--tickets.find--}}
+          </li>
+        @endguest
+
         @auth
           @if(auth()->user()->type === 'organiser')
             <li class="nav-item">
-              <a class="nav-link {{ request()->routeIs('events.create') ? 'active' : '' }}"
-                 href="{{ route('events.index') }}">Create Event</a>
+              <a class="nav-link" href="{{ route('events.index') }}">Create Event</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                 href="{{ route('dashboard') }}">Dashboard</a>
+              <a class="nav-link" href="{{ route('events.index') }}">Event Dashboard</a>
             </li>
           @else
             <li class="nav-item">
-              <a class="nav-link {{ request()->routeIs('bookings.index') ? 'active' : '' }}"
-                 href="{{ route('events.index') }}">My Bookings</a>
+              <a class="nav-link" href="{{ route('events.index') }}">My Bookings</a>
             </li>
           @endif
         @endauth
