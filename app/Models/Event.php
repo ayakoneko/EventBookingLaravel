@@ -16,7 +16,7 @@ class Event extends Model
         'location', 'is_online','online_url',
         'capacity',
         'price_cents','currency',
-        'image_path','slug',
+        'image_path',
     ];
 
     protected $casts = ['starts_at' => 'datetime','ends_at' => 'datetime'];

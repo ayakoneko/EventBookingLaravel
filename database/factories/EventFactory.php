@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -18,11 +17,30 @@ class EventFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition(): array
-    {
+    {   
+        //Event Pool for Title/Location/Image
+        $pool = collect([
+            ['title' => 'Brisbane Career Fair', 'location' => 'Brisbane', 'is_online' => false, 'image_path' => 'images/CareerFair.png'],
+            ['title' => 'Sydney Music Live Night','location' => 'Sydney', 'is_online' => false, 'image_path' => 'images/MusicLive.png'],
+            ['title' => 'Melbourne Networking Evening', 'location' => 'Melbourne', 'is_online' => false, 'image_path' => 'images/NetworkingEvent.png'],
+            ['title' => 'Perth City Fun Run 10K', 'location' => 'Perth', 'is_online' => false, 'image_path' => 'images/RunningEvent.png'],
+            ['title' => 'Darwin Social Mixer', 'location' => 'Darwin', 'is_online' => false, 'image_path' => 'images/SocialEvent.png'],
+            ['title' => 'National Tech Webinar 2025', 'location' => 'Online', 'is_online' => true, 'image_path' => 'images/Webiner.png'],
+            ['title' => 'Adelaide Wine & Cheese Night', 'location' => 'Adelaide', 'is_online' => false, 'image_path' => 'images/WineParty.png'],
+            ['title' => 'Canberra Sunrise Yoga', 'location' => 'Canberra', 'is_online' => false, 'image_path' => 'images/YogaEvent.png'],
+            ['title' => 'Gold Coast Yacht Party', 'location' => 'Gold Coast', 'is_online' => false, 'image_path' => 'images/YotParty.png'],
+            ['title' => 'Griffith Career Expo', 'location' => 'Gold Coast', 'is_online' => false, 'image_path' => 'images/CareerFair.png'],
+            ['title' => 'Wollongong Indie Music Live', 'location' => 'Wollongong', 'is_online' => false, 'image_path' => 'images/MusicLive.png'],
+            ['title' => 'Geelong Startups Networking', 'location' => 'Geelong', 'is_online' => false, 'image_path' => 'images/NetworkingEvent.png'],
+            ['title' => 'Australia-Wide Virtual Yoga Retreat', 'location' => 'Online', 'is_online' => true, 'image_path' => 'images/YogaEvent.png'],
+            ['title' => 'Sunshine Coast Family Fun Run', 'location' => 'Sunshine Coast', 'is_online' => false, 'image_path' => 'images/RunningEvent.png'],
+            ['title' => 'Townsville Community Social', 'location' => 'Townsville', 'is_online' => false, 'image_path' => 'images/SocialEvent.png'],
+        ]);
+        $preset = $pool->shift();
+        $title = $preset['title'];
+
         $organiserId = User::where('type', 'organiser')->inRandomOrder()->value('id')
             ?? User::factory()->organiser()->create()->id;
-
-        $title = fake()->unique()->sentence(3);
 
         $start = now()->addDays(fake()->numberBetween(1, 60))
                       ->setTime(fake()->numberBetween(9, 20), [0,30][rand(0,1)]);
@@ -35,14 +53,13 @@ class EventFactory extends Factory
             'organiser_id' => $organiserId,
             'starts_at'    => $start,
             'ends_at'      => $end,
-            'location'     => fake()->randomElement(['Online', fake()->city()]),
-            'is_online'    => false,
+            'location'     => $preset['location'],
+            'is_online'    => $preset['is_online'],
             'online_url'   => null,
             'capacity'     => fake()->numberBetween(20, 200),
             'price_cents'  => fake()->randomElement([0, 1500, 2500, 5000]),
             'currency'     => 'AUD',
-            'image_path'   => null,
-            'slug'         => Str::slug($title) . '-' . Str::lower(Str::random(6)),
+            'image_path'   => $preset['image_path'],
         ];
     }
 }
