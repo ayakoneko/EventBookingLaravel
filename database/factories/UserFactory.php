@@ -29,9 +29,23 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'type' => 'attendee', // default role
+            'consented_at' => now(),
         ];
     }
 
+    /** State: organiser */
+    public function organiser(): static
+    {
+        return $this->state(fn () => ['type' => 'organiser']);
+    }
+
+    /** State: attendee (explicit) */
+    public function attendee(): static
+    {
+        return $this->state(fn () => ['type' => 'attendee']);
+    }
+    
     /**
      * Indicate that the model's email address should be unverified.
      */
