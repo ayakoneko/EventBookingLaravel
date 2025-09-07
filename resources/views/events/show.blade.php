@@ -63,6 +63,21 @@
               @endif
             </span>
           </div>
+
+          @auth
+            @if (auth()->id() === optional($event->organiser)->id)
+              <div class="d-flex gap-2 justify-content-end mb-3">
+                <a href="{{ route('events.edit', $event) }}" class="btn btn-sm btn-primary"> Edit </a>
+
+                <form method="POST" action="{{ route('events.destroy', $event) }}"
+                      onsubmit="return confirm('Delete this event? This cannot be undone.');">
+                    {{csrf_field()}}
+                    {{ method_field('DELETE') }}
+                  <button type="submit" class="btn btn-sm btn-danger"> Delete </button>
+                </form>
+              </div>
+            @endif
+          @endauth
         </div>
       </div>
     </div>
