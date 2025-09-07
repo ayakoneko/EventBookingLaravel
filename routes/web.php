@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsOrganiser;
 use App\Http\Middleware\EnsureUserIsAttendee;
@@ -32,7 +33,9 @@ Route::middleware(['auth', 'organiser'])->group(function () {
 
 // Authorized Attendee Only
 Route::middleware(['auth', 'attendee'])->group(function () {
+    Route::post('/events/{event}/book', [BookingController::class, 'store'])->name('events.book');
     Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
+
 });
 
 require __DIR__.'/auth.php';
