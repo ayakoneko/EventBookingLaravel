@@ -78,6 +78,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        abort_unless($event->organiser_id === Auth::id(), 403);
         return view('events.edit_form')->with('event', $event);
     }
 
@@ -86,6 +87,8 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        abort_unless($event->organiser_id === Auth::id(), 403);
+        
         $validated = $request->validate([
             'title'        => ['required', 'string', 'max:100'],
             'description'  => ['nullable', 'string', 'max:1000'],
@@ -108,6 +111,8 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        abort_unless($event->organiser_id === Auth::id(), 403);
+        
         $event->delete();
         return redirect()->route('events.index')->with('success', 'Event deleted.');
     }
