@@ -37,7 +37,13 @@ class BookingController extends Controller
     public function store(Request $request, Event $event)
     {
         $user = $request->user();
-        
+
+        //Duplicate Check 
+        $already = Booking::where('event_id', $event->id)->where('user_id', $user->id)->exists();
+        if ($already) {
+            return back()->withErrors(['booking' => 'You already booked this event.']);
+        }
+
         Booking::create([
             'event_id'    => $event->id,
             'user_id'     => $user->id,
