@@ -17,6 +17,7 @@
       @php
         $confirmed = $event->bookings()->where('status', 'confirmed')->count();
         $remaining = max(0, ($event->capacity ?? 0) - $confirmed);
+        $alreadyBooked = auth()->check()&& $event->bookings()->where('user_id', auth()->id())->where('status','confirmed')->exists();
       @endphp
 
       <div class="row g-3 mt-2">
@@ -77,8 +78,10 @@
                 </form>
               </div>
             @elseif (auth()->user()->type === 'attendee')            
-              @if ($remaining === 0)
-                <button class="btn btn-secondary disabled" disabled>Event Full</button>
+              @if ($alreadyBooked)
+                <button class="btn btn-secondary disabled" disabled>Booked</button>
+              @elseif ($remaining === 0)
+                <button class="btn btn-secondary disabled">NA-Event Full</button>
               @else
                 <form method="POST" action="{{ route('events.book', $event) }}">
                   {{csrf_field()}}      
