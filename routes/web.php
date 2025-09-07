@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsOrganiser;
 use App\Http\Middleware\EnsureUserIsAttendee;
@@ -28,7 +29,7 @@ Route::middleware(['auth', 'organiser'])->group(function () {
     Route::get('/events/{event}/edit', [EventController::class, 'edit'])->whereNumber('event')->name('events.edit');
     Route::put('/events/{event}', [EventController::class, 'update'])->whereNumber('event')->name('events.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->whereNumber('event')->name('events.destroy');
-    Route::get('/organiser/dashboard', fn() => view('organiser.dashboard'))->name('organiser.dashboard');
+    Route::get('/organiser/dashboard',[DashboardController::class, 'index'])->name('organiser.dashboard');
 });
 
 // Authorized Attendee Only
