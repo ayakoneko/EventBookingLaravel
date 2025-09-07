@@ -25,7 +25,20 @@ class EventController extends Controller
      */
     public function create()
     {
-        //
+        $event = (object)[
+            'title'       => null,
+            'description' => null,
+            'starts_at'   => null,
+            'ends_at'     => null,
+            'location'    => null,
+            'is_online'   => 0,
+            'online_url'  => null,
+            'capacity'    => null,
+            'price_cents' => 0,
+            'image_path'  => null,
+        ];
+        
+        return view('events.create_form')->with('event', $event);
     }
 
     /**

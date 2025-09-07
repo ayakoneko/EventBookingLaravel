@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'organiser'])->group(function () {
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+    Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/organiser/dashboard', fn() => view('organiser.dashboard'))->name('organiser.dashboard');
 });
 
