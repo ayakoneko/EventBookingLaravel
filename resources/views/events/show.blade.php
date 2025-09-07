@@ -78,7 +78,7 @@
               </div>
             @elseif (auth()->user()->type === 'attendee')            
               @if ($remaining === 0)
-                <button class="btn btn-secondary" disabled>Event Full</button>
+                <button class="btn btn-secondary disabled" disabled>Event Full</button>
               @else
                 <form method="POST" action="{{ route('events.book', $event) }}">
                   {{csrf_field()}}      

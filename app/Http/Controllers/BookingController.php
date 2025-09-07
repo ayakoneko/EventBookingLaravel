@@ -3,11 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema; 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Event;
