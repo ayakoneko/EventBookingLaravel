@@ -20,7 +20,8 @@ class BookingController extends Controller
      */
     public function index(Request $request)
     {
-        return view('bookings.index', ['bookings' => collect()]);
+        $bookings = Booking::with('event') ->where('user_id', $request->user()->id) ->paginate(8); 
+        return view('bookings.index', ['bookings', $bookings]);   
     }
 
     /**
@@ -42,6 +43,12 @@ class BookingController extends Controller
         $already = Booking::where('event_id', $event->id)->where('user_id', $user->id)->exists();
         if ($already) {
             return back()->withErrors(['booking' => 'You already booked this event.']);
+        }
+
+        //Capacity Check 
+        $confirmedCount = Booking::where('event_id', $event->id)->where('status', 'confirmed')->count();
+        if ($confirmedCount >= $event->capacity) {
+            return back()->withErrors(['capacity' => 'Sorry, this event is full.']);
         }
 
         Booking::create([

@@ -76,11 +76,15 @@
                   <button type="submit" class="btn btn-sm btn-danger"> Delete </button>
                 </form>
               </div>
-            @elseif (auth()->user()->type === 'attendee')
-              <form method="POST" action="{{ route('events.book', $event) }}">
-                {{csrf_field()}}      
-                <button type="submit" class="btn btn-primary">Book this event</button>
-              </form>
+            @elseif (auth()->user()->type === 'attendee')            
+              @if ($remaining === 0)
+                <button class="btn btn-secondary" disabled>Event Full</button>
+              @else
+                <form method="POST" action="{{ route('events.book', $event) }}">
+                  {{csrf_field()}}      
+                  <button type="submit" class="btn btn-primary">Book this event</button>
+                </form>
+              @endif
             @endif
           @endauth
         </div>
