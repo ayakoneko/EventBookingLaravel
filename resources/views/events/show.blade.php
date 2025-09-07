@@ -23,7 +23,10 @@
         <div class="col-md-6">
           <div class="mb-2">
             <strong>When:</strong>
-              {{ $event->starts_at->format('D, M j, Y g:ia') }} – {{ $event->ends_at->format('D, M j, Y g:ia') }}
+              {{ $event->starts_at->format('D, M j, Y g:ia') }} 
+              @if ($event->ends_at)
+                – {{ $event->ends_at->format('D, M j, Y g:ia') }}
+              @endif
           </div>
 
           <div class="mb-2">

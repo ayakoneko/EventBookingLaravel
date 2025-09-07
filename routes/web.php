@@ -8,7 +8,7 @@ use App\Http\Middleware\EnsureUserIsAttendee;
 
 // Public: event list (home) and detail
 Route::get('/', [EventController::class, 'index'])->name('events.index');
-Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events/{event}', [EventController::class, 'show'])->whereNumber('event')->name('events.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -29,7 +29,7 @@ Route::middleware(['auth', 'organiser'])->group(function () {
 
 // Authorized Attendee Only
 Route::middleware(['auth', 'attendee'])->group(function () {
-    // Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
 });
 
 require __DIR__.'/auth.php';

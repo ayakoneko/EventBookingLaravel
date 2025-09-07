@@ -23,7 +23,7 @@
               <div class="text-truncate"> {{$event->location}}</div>
             </div>
 
-            <a href="{{ url('event/'.$event->id) }}" class="stretched-link mt-auto">Details</a>
+            <a href="{{ route('events.show', $event) }}" class="stretched-link mt-auto">Details</a>
 
           </div>
         </div>

@@ -27,8 +27,8 @@ return new class extends Migration
             $table->unsignedSmallInteger('capacity');           
             $table->unsignedInteger('price_cents')->default(0); 
             $table->char('currency', 3)->default('AUD');
-
-            $table->string('image_path');
+            
+            $table->string('image_path', 255)->nullable();
             $table->timestamps();
 
             // handy filters
