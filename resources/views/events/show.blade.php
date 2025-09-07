@@ -15,9 +15,14 @@
       <h3>{{ $event->title }}</h3>
 
       @php
-        $confirmed = $event->bookings()->where('status', 'confirmed')->count();
+        // seats
+        $confirmed = $event->bookings()->where('status','confirmed')->count();
         $remaining = max(0, ($event->capacity ?? 0) - $confirmed);
-        $alreadyBooked = auth()->check()&& $event->bookings()->where('user_id', auth()->id())->where('status','confirmed')->exists();
+
+        // current user's booking for this event (if any)
+        $userBooking  = auth()->check() ? $event->bookings()->where('user_id', auth()->id())->latest()->first(): null;
+        $isConfirmed  = $userBooking && $userBooking->status === 'confirmed';
+        $isCancelled  = $userBooking && $userBooking->status === 'cancelled';
       @endphp
 
       <div class="row g-3 mt-2">
@@ -78,11 +83,22 @@
                 </form>
               </div>
             @elseif (auth()->user()->type === 'attendee')            
-              @if ($alreadyBooked)
-                <button class="btn btn-secondary disabled" disabled>Booked</button>
+              @if ($isConfirmed)
+                <button class="btn btn-secondary disabled" disabled>Already Booked</button>
+                <form method="POST" action="{{ route('bookings.destroy', $userBooking) }}"
+                      onsubmit="return confirm('Cancel this booking?');">
+                    {{csrf_field()}}
+                    {{ method_field('DELETE') }}
+                  <button class="btn btn-outline-danger btn-sm">Cancel</button>
+                </form>
+                
               @elseif ($remaining === 0)
-                <button class="btn btn-secondary disabled">NA-Event Full</button>
+                <button class="btn btn-secondary disabled" disabled>NA-Event Full</button>
+              
               @else
+                @if ($isCancelled)
+                  <button class="btn btn-secondary disabled" disabled>Cancelled</button>
+                @endif
                 <form method="POST" action="{{ route('events.book', $event) }}">
                   {{csrf_field()}}      
                   <button type="submit" class="btn btn-primary">Book this event</button>

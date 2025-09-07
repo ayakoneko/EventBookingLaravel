@@ -35,7 +35,7 @@ Route::middleware(['auth', 'organiser'])->group(function () {
 Route::middleware(['auth', 'attendee'])->group(function () {
     Route::post('/events/{event}/book', [BookingController::class, 'store'])->name('events.book');
     Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
-
+    Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 });
 
 require __DIR__.'/auth.php';
