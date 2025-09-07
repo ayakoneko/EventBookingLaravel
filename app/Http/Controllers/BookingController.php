@@ -21,7 +21,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $bookings = Booking::with('event') ->where('user_id', $request->user()->id) ->paginate(8); 
-        return view('bookings.index', ['bookings', $bookings]);   
+        return view('bookings.index', ['bookings' => $bookings]);
     }
 
     /**
