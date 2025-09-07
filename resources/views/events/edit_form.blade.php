@@ -1,26 +1,15 @@
-@extends('layouts.master')
+  @extends('.layouts.master')
 
-@section('title')
-    Edit Events
-@endsection
+  @section('title')
+      Edit Event
+  @endsection
 
-@section('content')
-<form method="POST" action='{{url("product/$product->id")}}'>
+  @section('content')
+  <form method="POST" action="{{ route('events.update', $event) }}">
     {{csrf_field()}}
     {{ method_field('PUT') }}
-    </p><label>Name</label>
-    <input type="text" name="name" value="{{$product->name}}"></p>
-    <p><label>Price</label>
-    <input type="text" name="price" value="{{$product->id}}"><br></p>
-    <p><select name="manufacturer">
-    @foreach ($manufacturers as $manufacturer)
-      @if($manufacturer->id == $product->manufacturer_id)
-        <option value="{{$manufacturer->id}}" selected="selected">{{$manufacturer->name}}</option>
-      @else
-        <option value="{{$manufacturer->id}}">{{$manufacturer->name}}</option>
-      @endif
-    @endforeach
-    </select>
+    @include('events._form', ['event' => $event])
+    
     <input type="submit" value="Update">
   </form>
-@endsection
+  @endsection

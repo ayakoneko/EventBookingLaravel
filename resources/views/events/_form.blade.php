@@ -8,12 +8,9 @@
   <textarea name="description" maxlength="1000">{{ old('description', $ev->description ?? '') }}</textarea>
 </label></p>
 
-<p><label>Starts at
-  <input type="datetime-local" name="starts_at" value="{{ old('starts_at', optional($ev->starts_at ?? null)->format('Y-m-d\TH:i')) }}" required>
-</label></p>
-
-<p><label>Ends at
-  <input type="datetime-local" name="ends_at" value="{{ old('ends_at', optional($ev->ends_at ?? null)->format('Y-m-d\TH:i')) }}">
+<p><label>Time
+  <input type="datetime-local" name="starts_at"  value="{{ old('starts_at', optional($event->starts_at)->format('Y-m-d\TH:i')) }}" required>
+  <input type="datetime-local" name="ends_at"  value="{{ old('ends_at', optional($event->ends_at)->format('Y-m-d\TH:i')) }}">
 </label></p>
 
 <p><label>Location

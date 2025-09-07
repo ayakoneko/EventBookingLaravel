@@ -76,23 +76,37 @@ class EventController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Event $event)
     {
-        //
+        return view('events.edit_form')->with('event', $event);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Event $event)
     {
-        //
+        $validated = $request->validate([
+            'title'        => ['required', 'string', 'max:100'],
+            'description'  => ['nullable', 'string', 'max:1000'],
+            'starts_at'    => ['required', 'date', 'after:now'],
+            'ends_at'      => ['nullable', 'date', 'after_or_equal:starts_at'],
+            'location'     => ['required', 'string', 'max:255'],
+            'is_online'    => ['required', 'in:0,1'],
+            'online_url'   => ['nullable', 'string', 'max:255'],
+            'capacity'     => ['required', 'integer', 'between:1,1000'],
+            'price_cents'  => ['required', 'integer', 'min:0'],
+            'image_path'   => ['nullable', 'string', 'max:255'],
+        ]);
+        
+        $event->update($validated);
+        return redirect()->route('events.show', $event)->with('success', 'Event updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Event $event)
     {
         //
     }
