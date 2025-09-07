@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Edit Products
+    Edit Events
 @endsection
 
 @section('content')

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema; 
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Booking;
@@ -46,16 +47,30 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title'        => ['required', 'string', 'max:100'],
+            'description'  => ['nullable', 'string', 'max:1000'],
+            'starts_at'    => ['required', 'date', 'after:now'],
+            'ends_at'      => ['nullable', 'date', 'after_or_equal:starts_at'],
+            'location'     => ['required', 'string', 'max:255'],
+            'is_online'    => ['required', 'in:0,1'],
+            'online_url'   => ['nullable', 'string', 'max:255'],
+            'capacity'     => ['required', 'integer', 'between:1,1000'],
+            'price_cents'  => ['required', 'integer', 'min:0'],
+            'image_path'   => ['nullable', 'string', 'max:255'],
+        ]);
+        $validated['organiser_id'] = Auth::id(); // owner = current user
+
+        $event = Event::create($validated);
+        return redirect()->route('events.show', $event) ->with('success', 'Event created.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Event $event)
     {
-        $event = Event::findOrFail($id);
-        return view('events.show')->with('event', $event);
+        return view('events.show', compact('event'));
     }
 
     /**

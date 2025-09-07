@@ -19,7 +19,11 @@ class Event extends Model
         'image_path',
     ];
 
-    protected $casts = ['starts_at' => 'datetime','ends_at' => 'datetime'];
+    protected $casts = [
+        'starts_at' => 'datetime',
+        'ends_at' => 'datetime',
+        'is_online' => 'boolean'
+    ];
     
     public function organiser() { return $this->belongsTo(User::class, 'organiser_id'); }
     public function bookings() { return $this->hasMany(Booking::class); }
