@@ -76,6 +76,11 @@
                   <button type="submit" class="btn btn-sm btn-danger"> Delete </button>
                 </form>
               </div>
+            @elseif (auth()->user()->type === 'attendee')
+              <form method="POST" action="{{ route('events.book', $event) }}">
+                {{csrf_field()}}      
+                <button type="submit" class="btn btn-primary">Book this event</button>
+              </form>
             @endif
           @endauth
         </div>

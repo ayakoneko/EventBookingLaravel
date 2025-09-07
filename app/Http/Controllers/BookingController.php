@@ -34,8 +34,17 @@ class BookingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Event $event)
     {
+        $user = $request->user();
+        
+        Booking::create([
+            'event_id'    => $event->id,
+            'user_id'     => $user->id,
+            'status'      => 'confirmed',
+            'ticket_code' => Str::upper(Str::random(8)),
+        ]);
+
         return redirect()->route('bookings.index')->with('success', 'Booking confirmed!');
     }
 
