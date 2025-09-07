@@ -20,7 +20,7 @@ class BookingController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        return view('bookings.index', ['bookings' => collect()]);
     }
 
     /**
@@ -36,7 +36,7 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return redirect()->route('bookings.index')->with('success', 'Booking confirmed!');
     }
 
     /**
