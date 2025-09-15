@@ -13,14 +13,20 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $userId = auth()->id();
+        $userId = $request->user()->id;
 
         $report = DB::select("
-            SELECT e.title
+            SELECT e.id, e.title, e.starts_at, e.capacity, 
+                COUNT(b.id) AS booking,
+                (e.capacity - COUNT(b.id)) AS remaining
             FROM events e
-            WHERE e.organizer_id = ?
+            LEFT JOIN bookings b 
+                ON e.id = b.event_id 
+                AND b.status = 'confirmed'
+            WHERE e.organiser_id = ?
+            GROUP BY e.id, e.title, e.starts_at, e.capacity
             ORDER BY e.starts_at DESC
         ", [$userId]);
 

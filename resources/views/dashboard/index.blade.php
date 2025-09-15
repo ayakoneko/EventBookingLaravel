@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @section('title')
-  Dashboard - {{$userID}}
+  Organizer Dashboard
 @endsection
 
 @section('content')
 <div class="container py-4">
-  <h2 class="mb-3">Organizer Dashboard</h2>
+  <h2 class="mb-3">Organizer Dashboard - ({{ count($report) }} events)</h2>
   
   <table class="table table-striped mt-3">
     <thead>
@@ -22,10 +22,11 @@
       @forelse ($report as $row)
         <tr>
           <td>{{ $row->title }}</td>
-          <td>{{ \Carbon\Carbon::parse($row->starts_at)->format('M d, Y g:ia') }}</td>
+          <td>{{ $row->starts_at}}</td>
           <td>{{ $row->capacity }}</td>
-          <td>{{ $row->booking_count }}</td>
+          <td>{{ $row->booking }}</td>
           <td>{{ $row->remaining }}</td>
+          
         </tr>
       @empty
         <tr>
