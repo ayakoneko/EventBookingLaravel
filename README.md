@@ -1,66 +1,112 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📅 Event Booking with Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+An event management and booking web application built with **Laravel**, developed as part of **7005ICT – Individual Project**.  
 
-## About Laravel
+This system allows **Organisers** to create and manage events, while **Attendees** can register, browse events, and book spots. The project demonstrates full-stack development skills including authentication, CRUD operations, raw SQL reporting, manual validation, automated testing, and implementation of advanced features.  
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🔹 Core Requirements
+- **User Types** (seeded via database seeder + self-register via form).
+  - Organisers
+  - Attendees 
+- **Authentication**
+  - Email/password login & logout.
+  - User name and type displayed on every page.
+- **Event Listing (Public)**
+  - Upcoming events shown on homepage with pagination (8 per page).
+  - Event details include title, description, time, location, capacity, and organiser.
+- **Event Management (Organisers)**
+  - Create, update, and delete events (CRUD).
+  - Validation for inputs (title, description, date, location, capacity).
+  - Delete restricted if bookings exist.
+- **Bookings (Attendees)**
+  - Book available upcoming events.
+  - Cannot book the same event twice.
+  - Cannot book if event is full (manual validation in controller).
+  - View all personal bookings in “My Bookings”.
+- **Dashboard & Reporting (Organisers)**
+  - Dashboard shows report of events created with:
+    - Event Title
+    - Event Date
+    - Total Capacity
+    - Current Bookings
+    - Remaining Spots
+  - Report uses **raw SQL query** for data aggregation.
+- **Privacy Policy Integration**
+  - Consent checkbox required during registration.
+  - Server-side validation ensures users must agree before account creation.
 
-## Learning Laravel
+### ✨ Advanced Requirements – Event Categories
+- **Organisers**
+  - Can assign one or more categories to an event when creating or updating it.
+- **Attendees**
+  - Categories are displayed on event detail pages.
+  - Homepage includes a filter by category option.
+- **Database**
+  - Many-to-many relationship between `events` and `categories` using a pivot table.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🧪 Automated Testing
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Comprehensive **Feature Tests** implemented with **PHPUnit** and Laravel’s testing framework:
 
-## Laravel Sponsors
+- **Guest Access**
+  - Can view events, paginate listings, and see event details.
+  - Redirected when accessing protected routes.
+- **Attendee Actions**
+  - Register, login/logout, book events, view bookings.
+  - Validation: Cannot double-book or book full events.
+- **Organiser Actions**
+  - Login and access dashboard.
+  - Create, update, and delete their own events.
+  - Restricted from editing or deleting others’ events or events with bookings.
+- **User Registration**
+  - Cannot register without agreeing to Privacy Policy.
+- **Advanced Feature**
+  - Dedicated test suite for Event Categories:
+    - Assigning categories to events.
+    - Display and filtering by categories.
+    - AJAX filtering validation.
+    - Category flag highlighting.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🛠️ Technologies
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **Backend:** Laravel (PHP)  
+- **Database:** SQLite (Eloquent ORM + raw SQL for reporting)  
+- **Frontend:** Blade templates, Bootstrap, AJAX (for filtering)  
+- **Authentication:** Laravel Breeze / Auth scaffolding  
+- **Testing:** PHPUnit, Laravel Feature Tests  
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ⚙️ Installation & Setup
 
-## Code of Conduct
+```bash
+# Clone the repo
+git clone https://github.com/ayakoneko/EventBookingLaravel.git
+cd EventBookingLaravel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Install dependencies
+composer install
+npm install && npm run dev
 
-## Security Vulnerabilities
+# Set up environment
+cp .env.example .env
+php artisan key:generate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Configure DB in .env
+DB_DATABASE=eventbooking
+DB_USERNAME=root
+DB_PASSWORD=secret
 
-## License
+# Run migrations and seeders
+php artisan migrate --seed
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Serve the app
+php artisan serve
