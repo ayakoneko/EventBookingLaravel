@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'type'=> 'attendee',
+            'type'=> 'attendee', // Default user tyoe via form registration
             'consented_at' => now(),
         ]);
 

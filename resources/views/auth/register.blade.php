@@ -42,8 +42,8 @@
         <!-- Consensus Checkbox -->
         <div class="mt-4">
             <label class="inline-flex items-start gap-2">
-                <input type="checkbox" name="consent" class="rounded">
-                <span> I consent to the Terms & Privacy Policy. </span>
+                <input type="checkbox" name="consent" class="rounded" required>
+                <span> I consent to the Terms & <a href="{{ route('policy') }}" target="_blank" class="text-blue-600 underline"> Privacy Policy</a></span>
             </label>
             @error('consent')
                 <div class="text-sm text-red-600 mt-2">{{ $message }}</div>
