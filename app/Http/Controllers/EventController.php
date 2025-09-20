@@ -97,6 +97,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        //creator-only
         abort_unless($event->organiser_id === Auth::id(), 403);
         
         $validated = $request->validate([
@@ -131,7 +132,13 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        //creator only
         abort_unless($event->organiser_id === Auth::id(), 403);
+        
+        // Block deletion when any bookings exist
+        if ($event->bookings()->exists()) {
+            return back()->with('error', 'This event has bookings and cannot be deleted.');
+        }
         
         $event->delete();
         return redirect()->route('events.index')->with('success', 'Event deleted.');
