@@ -27,7 +27,7 @@ class DashboardController extends Controller
                 AND b.status = 'confirmed'
             WHERE e.organiser_id = ?
             GROUP BY e.id, e.title, e.starts_at, e.capacity
-            ORDER BY e.starts_at DESC
+            ORDER BY e.starts_at ASC
         ", [$userId]);
 
         return view('dashboard.index', ['report' => $report, 'user' => $request->user()]);

@@ -12,7 +12,7 @@
     <thead>
       <tr>
         <th>Event Title</th>
-        <th>Date</th>
+        <th>Date (Start at) </th>
         <th>Capacity</th>
         <th>Bookings</th>
         <th>Remaining</th>
@@ -21,7 +21,7 @@
     <tbody>
       @forelse ($report as $row)
         <tr>
-          <td>{{ $row->title }}</td>
+          <td><a href="{{ route('events.show', $row->id) }}">{{ $row->title }}</a></td>
           <td>{{ $row->starts_at}}</td>
           <td>{{ $row->capacity }}</td>
           <td>{{ $row->booking }}</td>

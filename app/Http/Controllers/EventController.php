@@ -16,7 +16,7 @@ class EventController extends Controller
     public function index()
     {
         // $events = Event::all();
-        $events=Event::paginate(8);
+        $events = Event::orderBy('starts_at', 'asc')->paginate(8);
         return view('events.index')->with('events', $events);
     }
 
@@ -25,18 +25,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        $event = (object)[
-            'title'       => null,
-            'description' => null,
-            'starts_at'   => null,
-            'ends_at'     => null,
-            'location'    => null,
-            'is_online'   => 0,
-            'online_url'  => null,
-            'capacity'    => null,
-            'price_cents' => 0,
-            'image_path'  => null,
-        ];
+        $event = new Event();
         
         return view('events.create_form')->with('event', $event);
     }
@@ -80,7 +69,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return view('events.show', compact('event'));
+        return view('events.show')->with('event', $event);
     }
 
     /**
@@ -88,7 +77,9 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        //creator-only
         abort_unless($event->organiser_id === Auth::id(), 403);
+
         return view('events.edit_form')->with('event', $event);
     }
 
