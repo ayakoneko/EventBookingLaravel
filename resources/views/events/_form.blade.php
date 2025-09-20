@@ -23,18 +23,16 @@
 </div>
 
 <div class="mb-3">
-  <label for="location" class="form-label">Location</label>
-  <input type="text" name="location" class="form-control" maxlength="255" value="{{ old('location', $ev->location ?? '') }}">
+  <label>Online Venue</label>
+  <input type="hidden" name="is_online" value="0">
+  <input type="checkbox" name="is_online" value="1"
+    @checked(old('is_online', $ev->is_online ?? 0))>
 </div>
 
 <div class="row mb-3">
   <div class="col">
-    <label for="is_online" class="form-label">Online Venue</label>
-    @php($isOnline = (int) old('is_online', $ev->is_online ?? 0))
-    <select name="is_online" class="form-select">
-      <option value="0" @selected($isOnline === 0)>No</option>
-      <option value="1" @selected($isOnline === 1)>Yes</option>
-    </select>
+    <label for="location" class="form-label">Location</label>
+    <input type="text" name="location" class="form-control" maxlength="255" value="{{ old('location', $ev->location ?? '') }}">
   </div>
   <div class="col">
     <label for="online_url" class="form-label">Online URL (if applicable)</label>
@@ -44,8 +42,8 @@
 
 <div class="row mb-3">
   <div class="col">
-    <label for="capacity" class="form-label">Capacity</label>
-    <input type="number" name="capacity" class="form-control" min="1" max="1000" value="{{ old('capacity', $ev->capacity ?? '') }}">
+    <label for="capacity" class="form-label">Capacity (1~1000)</label>
+    <input type="number" name="capacity" class="form-control" min="1" max="1000" value="{{ old('capacity', $ev->capacity ?? '') }}" required>
   </div>
   <div class="col">
     <label for="price_cents" class="form-label">Price (cents)</label>

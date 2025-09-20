@@ -49,15 +49,26 @@ class EventController extends Controller
         $validated = $request->validate([
             'title'        => ['required', 'string', 'max:100'],
             'description'  => ['nullable', 'string', 'max:1000'],
-            'starts_at'    => ['required', 'date', 'after:now'],
-            'ends_at'      => ['nullable', 'date', 'after_or_equal:starts_at'],
-            'location'     => ['required', 'string', 'max:255'],
+            'starts_at'    => ['required', 'date', 'date_format:Y-m-d\TH:i', 'after:now'],
+            'ends_at'      => ['nullable', 'date', 'date_format:Y-m-d\TH:i', 'after_or_equal:starts_at'],
             'is_online'    => ['required', 'in:0,1'],
-            'online_url'   => ['nullable', 'string', 'max:255'],
+            'location'     => ['required_if:is_online,0', 'nullable', 'string', 'max:255'],
+            'online_url'   => ['required_if:is_online,1','nullable', 'url', 'max:255'],
             'capacity'     => ['required', 'integer', 'between:1,1000'],
             'price_cents'  => ['required', 'integer', 'min:0'],
             'image_path'   => ['nullable', 'string', 'max:255'],
+        ],
+        [
+            'starts_at.after'   => 'The start time must be in the future.',
+            'ends_at.after'     => 'The end time must be after the start time.',
+            'location.required_if'   => 'Location is required for in-person events.',
+            'online_url.required_if' => 'Online URL is required when the event is online.',
         ]);
+        
+        if ($request->boolean('is_online')) {
+            $validated['location'] = 'Online';
+        }
+
         $validated['organiser_id'] = Auth::id(); // owner = current user
 
         $event = Event::create($validated);
@@ -91,16 +102,26 @@ class EventController extends Controller
         $validated = $request->validate([
             'title'        => ['required', 'string', 'max:100'],
             'description'  => ['nullable', 'string', 'max:1000'],
-            'starts_at'    => ['required', 'date', 'after:now'],
-            'ends_at'      => ['nullable', 'date', 'after_or_equal:starts_at'],
-            'location'     => ['required', 'string', 'max:255'],
+            'starts_at'    => ['required', 'date', 'date_format:Y-m-d\TH:i', 'after:now'],
+            'ends_at'      => ['nullable', 'date', 'date_format:Y-m-d\TH:i', 'after_or_equal:starts_at'],
             'is_online'    => ['required', 'in:0,1'],
-            'online_url'   => ['nullable', 'string', 'max:255'],
+            'location'     => ['required_if:is_online,0', 'nullable', 'string', 'max:255'],
+            'online_url'   => ['required_if:is_online,1','url', 'string', 'max:255'],
             'capacity'     => ['required', 'integer', 'between:1,1000'],
             'price_cents'  => ['required', 'integer', 'min:0'],
             'image_path'   => ['nullable', 'string', 'max:255'],
+        ],
+        [
+            'starts_at.after'   => 'The start time must be in the future.',
+            'ends_at.after'     => 'The end time must be after the start time.',
+            'location.required_if'   => 'Location is required for in-person events.',
+            'online_url.required_if' => 'Online URL is required when the event is online.',
         ]);
-        
+
+        if ($request->boolean('is_online')) {
+            $validated['location'] = 'Online';
+        }
+
         $event->update($validated);
         return redirect()->route('events.show', $event)->with('success', 'Event updated.');
     }

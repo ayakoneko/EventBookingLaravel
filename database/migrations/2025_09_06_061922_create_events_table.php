@@ -20,12 +20,13 @@ return new class extends Migration
             $table->dateTime('starts_at'); // must be future date
             $table->dateTime('ends_at')->nullable(); 
 
+            
+            $table->boolean('is_online')->default(0);
             $table->string('location', 255);
-            $table->boolean('is_online')->default(false);
             $table->string('online_url')->nullable();
 
-            $table->unsignedTinyInteger('capacity');    //min 1, max 1000       
-            $table->unsignedSmallInteger('price_cents')->default(0); 
+            $table->unsignedSmallInteger('capacity');    //min 1, max 1000       
+            $table->unsignedInteger('price_cents')->default(0); 
             $table->char('currency', 3)->default('AUD');
             
             $table->string('image_path', 255)->nullable();
