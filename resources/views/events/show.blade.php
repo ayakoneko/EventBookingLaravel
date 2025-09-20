@@ -87,6 +87,7 @@
                   <button type="submit" class="btn btn-sm btn-danger"> Delete </button>
                 </form>
               </div>
+              
             @elseif (auth()->user()->type === 'attendee')            
               @if ($isConfirmed)
                 <button class="btn btn-secondary disabled" disabled>Already Booked</button>
@@ -106,7 +107,7 @@
                 @endif
                 <form method="POST" action="{{ route('events.book', $event) }}">
                   {{csrf_field()}}      
-                  <button type="submit" class="btn btn-primary">Book this event</button>
+                  <button type="submit" class="btn btn-primary">Book Now</button>
                 </form>
               @endif
             @endif

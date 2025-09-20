@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule; 
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Event;
@@ -37,10 +38,18 @@ class BookingController extends Controller
         $user = $request->user();
 
         //Duplicate Check 
-        $already = Booking::where('event_id', $event->id)->where('user_id', $user->id)->exists();
-        if ($already) {
-            return back()->withErrors(['booking' => 'You already booked this event.']);
-        }
+        $request->merge(['user_id' => $user->id]);
+        $request->validate([
+            'user_id' => [
+                Rule::unique('bookings','user_id')
+                    ->where(fn($q) => $q->where('event_id',$event->id)->where('status','confirmed')),
+            ],
+        ], ['user_id.unique' => 'You already booked this event.']);
+
+        // $already = Booking::where('event_id', $event->id)->where('user_id', $user->id)->exists();
+        // if ($already) {
+        //     return back()->withErrors(['booking' => 'You already booked this event.']);
+        // }
 
         //Capacity Check 
         $confirmedCount = Booking::where('event_id', $event->id)->where('status', 'confirmed')->count();
@@ -48,12 +57,16 @@ class BookingController extends Controller
             return back()->withErrors(['capacity' => 'Sorry, this event is full.']);
         }
 
-        Booking::create([
+        // Reuse the event ID/user ID (cancelled and rebooked case)
+        $booking = Booking::firstOrNew([
             'event_id'    => $event->id,
             'user_id'     => $user->id,
-            'status'      => 'confirmed',
-            'ticket_code' => Str::upper(Str::random(8)),
         ]);
+
+        $booking->status = 'confirmed';
+        $booking->cancelled_at = null;
+        $booking->ticket_code = $booking->ticket_code ?: Str::upper(Str::random(8));
+        $booking->save();
 
         return redirect()->route('bookings.index')->with('success', 'Booking confirmed!');
     }

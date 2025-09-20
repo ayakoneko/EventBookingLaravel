@@ -21,16 +21,24 @@
           <div>
             <a href="{{ route('events.show', $booking->event) }}"> {{ $booking->event->title }} </a>
             <div class="text-muted">
-              {{ $booking->event->starts_at->format('D, d M Y H:i') }}
+              {{ $booking->event?->starts_at?->format('D, M j, Y g:ia') }}
+              @if ($booking->event?->ends_at)
+                – {{ $booking->event->ends_at->format('D, M j, Y g:ia') }}
+              @endif
             </div>
-            @if($booking->ticket_code)
-              <small>Ticket: {{ $booking->ticket_code }}</small>
-            @endif
+            <div>
+              <small>Location: {{ $booking->event->location }}</small>
+            </div>            
           </div>
+          <div>
+          @if($booking->ticket_code)
+            <small>Ticket: {{ $booking->ticket_code }}</small>
+          @endif
           <span class="badge bg-{{ $booking->status === 'confirmed' ? 'success' : 'secondary' }}"> {{ ucfirst($booking->status) }} </span>
+          </div>  
         </li>
       @endforeach
     </ul>
-    <div class="mt-3">{{ $bookings->links() }}</div>
+    <div class="mt-3">{{ $bookings->links() }}</div> 
   @endif
 @endsection
