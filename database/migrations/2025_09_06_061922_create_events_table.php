@@ -24,8 +24,8 @@ return new class extends Migration
             $table->boolean('is_online')->default(false);
             $table->string('online_url')->nullable();
 
-            $table->unsignedSmallInteger('capacity');           
-            $table->unsignedInteger('price_cents')->default(0); 
+            $table->unsignedTinyInteger('capacity');    //min 1, max 1000       
+            $table->unsignedSmallInteger('price_cents')->default(0); 
             $table->char('currency', 3)->default('AUD');
             
             $table->string('image_path', 255)->nullable();

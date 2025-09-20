@@ -44,6 +44,11 @@
           </div>
 
           <div class="mb-2">
+            <strong>Capacity:</strong> 
+              {{$event->capacity}}
+          </div>
+
+          <div class="mb-2">
             <strong>Organizer:</strong> 
               {{($event->organiser)->name}}
           </div>

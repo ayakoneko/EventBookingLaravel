@@ -43,7 +43,7 @@
         @auth
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" role="button">
-              {{ Auth::user()->name }}
+              {{ Auth::user()->name }} ({{ Auth::user()->type }})
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>

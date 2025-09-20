@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-  Organizer Dashboard
+  Dashboard - {{ $user->name }}
 @endsection
 
 @section('content')

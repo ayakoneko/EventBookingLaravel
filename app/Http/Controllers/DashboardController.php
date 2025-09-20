@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ORDER BY e.starts_at DESC
         ", [$userId]);
 
-        return view('dashboard.index', ['report' => $report]);
+        return view('dashboard.index', ['report' => $report, 'user' => $request->user()]);
     }
 
     /**
