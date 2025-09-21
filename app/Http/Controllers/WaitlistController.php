@@ -11,9 +11,10 @@ class WaitlistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //s
+        $waitlists = Waitlist::with('event') ->where('user_id', $request->user()->id) ->paginate(8); 
+        return view('waitlists.index', ['waitlists' => $waitlists]);
     }
 
     /**

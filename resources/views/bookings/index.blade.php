@@ -12,7 +12,7 @@
     <div class="alert alert-danger">{{ $errors->first() }}</div>
   @endif
 
-  @if ($bookings->isEmpty())
+  @if ($bookings->count() === 0)
     <p>You have not booked any events yet.</p>
   @else
     <ul class="list-group">
@@ -41,4 +41,5 @@
     </ul>
     <div class="mt-3">{{ $bookings->links() }}</div> 
   @endif
+</div>
 @endsection

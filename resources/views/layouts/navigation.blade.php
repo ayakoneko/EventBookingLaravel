@@ -30,6 +30,9 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ route('bookings.index') }}">My Bookings</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('waitlists.index') }}">My Waitlists</a>
+            </li>
           @endif
         @endauth
       </ul>

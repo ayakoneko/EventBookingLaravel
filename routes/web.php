@@ -41,6 +41,7 @@ Route::middleware(['auth', 'attendee'])->group(function () {
     Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
     Route::post('/events/{event}/waitlist', [WaitlistController::class, 'store'])->whereNumber('event')->name('waitlists.join');
+    Route::get('/my-waitlist', [WaitlistController::class, 'index'])->name('waitlists.index');
 });
 
 require __DIR__.'/auth.php';
