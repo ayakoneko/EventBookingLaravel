@@ -27,5 +27,19 @@ class Event extends Model
     
     public function organiser() { return $this->belongsTo(User::class, 'organiser_id'); }
     public function bookings() { return $this->hasMany(Booking::class); }
-      
+    public function waitlists() { return $this->hasMany(Waitlist::class)->orderBy('position'); }
+
+    //Helper for Confirmed Booking
+    //1. if booking is confirmed
+    //2. if the event is full of booking
+    //3. user’s waitlist position(row)  
+    //4. user already have a confirmed booking for the event
+
+    public function confirmedBookings() {
+        return $this->bookings()->where('status', 'confirmed');
+    }
+
+    public function isFull(): bool {
+        return $this->confirmedBookings()->count() >= (int)$this->capacity;
+    }
 }

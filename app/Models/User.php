@@ -25,6 +25,7 @@ class User extends Authenticatable
 
     public function events() { return $this->hasMany(Event::class, 'organiser_id');}
     public function bookings() { return $this->hasMany(Booking::class); }
+    public function waitlists() { return $this->hasMany(Waitlist::class); }
 
 
     /**
