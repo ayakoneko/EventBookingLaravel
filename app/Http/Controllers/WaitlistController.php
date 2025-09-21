@@ -86,8 +86,22 @@ class WaitlistController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, Event $event)
     {
-        //
+        
+        $userId = $request->user()->id;
+
+        // Current user's waitlist entry and current position 
+        $entry = Waitlist::where('event_id', $event->id)->where('user_id', $userId)->first();
+        $pos = $entry->position;
+
+        // 1. remove the row
+        $entry->delete();
+
+        // 2. compact positions: shift everyone behind up by 1
+        Waitlist::where('event_id', $event->id)->where('position', '>', $pos)->decrement('position');
+
+        return back()->with('success', 'Left waitlist.');
+
     }
 }

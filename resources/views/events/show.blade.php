@@ -112,6 +112,12 @@
                   <button class="btn btn-secondary" disabled>
                     You’re on the waitlist (pos #{{ $myWaitlist->position }})
                   </button>
+                  <form method="POST" action="{{ route('waitlist.destroy', $event) }}"
+                      onsubmit="return confirm('Leave the waitlist? Your wait position will be reset.');">
+                    {{csrf_field()}}
+                    {{ method_field('DELETE') }}
+                  <button type="submit" class="btn btn-sm btn-danger"> Leave Waitlist </button>
+                </form>
                 @endif
               
               @else
