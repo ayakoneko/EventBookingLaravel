@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Waitlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WaitlistController extends Controller
 {
@@ -15,6 +16,18 @@ class WaitlistController extends Controller
     {
         $waitlists = Waitlist::with('event') ->where('user_id', $request->user()->id) ->paginate(8); 
         return view('waitlists.index', ['waitlists' => $waitlists]);
+    }
+
+    // organizer only - view all the attendees on the waitlsit for any of their specific events
+    public function admin(Request $request, Event $event)
+    {
+        //creator-only
+        abort_unless($event->organiser_id === Auth::id(), 403);
+
+        $event->loadCount(['confirmedBookings', 'waitlists']);
+        $entries = $event->waitlists()->with('user') ->orderBy('position') ->paginate(8); 
+
+        return view('waitlists.admin', ['event' => $event, 'entries' => $entries]);
     }
 
     /**

@@ -25,7 +25,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ route('organiser.dashboard') }}">Event Dashboard</a>
-            </li>
+            </li>            
           @else
             <li class="nav-item">
               <a class="nav-link" href="{{ route('bookings.index') }}">My Bookings</a>

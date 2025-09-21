@@ -33,6 +33,7 @@ Route::middleware(['auth', 'organiser'])->group(function () {
     Route::put('/events/{event}', [EventController::class, 'update'])->whereNumber('event')->name('events.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->whereNumber('event')->name('events.destroy');
     Route::get('/organiser/dashboard',[DashboardController::class, 'index'])->name('organiser.dashboard');
+    Route::get('/events/{event}/waitlist/admin', [WaitlistController::class, 'admin'])->whereNumber('event')->name('waitlists.admin');
 });
 
 // Authorized Attendee Only

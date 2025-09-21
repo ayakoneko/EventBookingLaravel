@@ -90,6 +90,7 @@
                   <button type="submit" class="btn btn-sm btn-danger"> Delete </button>
                 </form>
               </div>
+              <div><a href="{{ route('waitlists.admin', $event) }}" class="btn btn-outline-secondary btn-sm">View Waitlist</a></div>
               
             @elseif (auth()->user()->type === 'attendee')            
               @if ($isConfirmed)
