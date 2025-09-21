@@ -27,7 +27,7 @@
           <td>{{ $row->capacity }}</td>
           <td>{{ $row->booking }}</td>
           <td>{{ $row->remaining }}</td>
-          <td>{{ $row->waitlists()->count() }} <a href="{{ route('waitlists.admin', $row->id) }}" class="btn btn-outline-secondary btn-sm">View Waitlist</a></td>
+          <td>{{ $row->waiting }} <a href="{{ route('waitlists.admin', $row->id) }}" class="btn btn-outline-secondary btn-sm">View Waitlist</a></td>
         </tr>
       @empty
         <tr>

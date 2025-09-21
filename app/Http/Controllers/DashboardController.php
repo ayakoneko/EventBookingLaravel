@@ -18,13 +18,13 @@ class DashboardController extends Controller
         $userId = $request->user()->id;
 
         $report = DB::select("
-            SELECT e.id, e.title, e.starts_at, e.capacity, 
-                COUNT(b.id) AS booking,
-                (e.capacity - COUNT(b.id)) AS remaining
+            SELECT e.id, e.title, e.starts_at, e.capacity,
+              COUNT(DISTINCT b.id) AS booking,
+              MAX(e.capacity - COUNT(DISTINCT b.id), 0) AS remaining,
+              COUNT(DISTINCT w.id) AS waiting
             FROM events e
-            LEFT JOIN bookings b 
-                ON e.id = b.event_id 
-                AND b.status = 'confirmed'
+            LEFT JOIN bookings  b ON e.id = b.event_id AND b.status = 'confirmed'
+            LEFT JOIN waitlists w ON e.id = w.event_id
             WHERE e.organiser_id = ?
             GROUP BY e.id, e.title, e.starts_at, e.capacity
             ORDER BY e.starts_at ASC
