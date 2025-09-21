@@ -52,8 +52,7 @@ class BookingController extends Controller
         // }
 
         //Capacity Check 
-        $confirmedCount = Booking::where('event_id', $event->id)->where('status', 'confirmed')->count();
-        if ($confirmedCount >= $event->capacity) {
+        if ($event->isFull()) {
             return back()->withErrors(['capacity' => 'Sorry, this event is full.']);
         }
 

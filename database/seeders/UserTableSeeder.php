@@ -38,7 +38,14 @@ class UserTableSeeder extends Seeder
             'type' => 'attendee',
             'consented_at' => now(),
         ]);
-        User::factory(9)->attendee()->create([
+        User::factory()->create([
+            'name' => 'Attendee Two',
+            'email' => 'aten2@example.test',
+            'password' => Hash::make('password'),
+            'type' => 'attendee',
+            'consented_at' => now(),
+        ]);
+        User::factory(8)->attendee()->create([
             'password' => Hash::make('password'),
             'consented_at' => now(),
         ]);

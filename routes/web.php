@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WaitlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsOrganiser;
 use App\Http\Middleware\EnsureUserIsAttendee;
@@ -39,6 +40,7 @@ Route::middleware(['auth', 'attendee'])->group(function () {
     Route::post('/events/{event}/book', [BookingController::class, 'store'])->name('events.book');
     Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::post('/events/{event}/waitlist', [WaitlistController::class, 'store'])->whereNumber('event')->name('waitlists.join');
 });
 
 require __DIR__.'/auth.php';

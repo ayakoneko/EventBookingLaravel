@@ -32,8 +32,8 @@ class Event extends Model
     //Helper for Confirmed Booking
     //1. if booking is confirmed
     //2. if the event is full of booking
-    //3. user’s waitlist position(row)  
-    //4. user already have a confirmed booking for the event
+    //3. user already have a confirmed booking for the event
+    //4. user’s waitlist row/model (can query later)
 
     public function confirmedBookings() {
         return $this->bookings()->where('status', 'confirmed');
@@ -41,5 +41,15 @@ class Event extends Model
 
     public function isFull(): bool {
         return $this->confirmedBookings()->count() >= (int)$this->capacity;
+    }
+
+    public function userHasConfirmedBooking(?int $userId): bool {
+        if (!$userId) return false;
+        return $this->confirmedBookings()->where('user_id', $userId)->exists();
+    }
+
+    public function userWaitlistEntry(?int $userId): ?Waitlist {
+        if (!$userId) return null;
+        return $this->waitlists()->where('user_id', $userId)->first();
     }
 }

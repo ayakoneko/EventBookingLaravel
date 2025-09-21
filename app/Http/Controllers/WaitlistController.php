@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\Waitlist;
 use Illuminate\Http\Request;
 
 class WaitlistController extends Controller
@@ -25,9 +27,35 @@ class WaitlistController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Event $event)
     {
-        //
+        $user = $request->user();
+
+        //Full Booking Check 
+        if (!$event->isFull()) {
+            return back()->withErrors(['waitlist' => 'Event is not full — you can book now.']);
+        }
+
+        //Confirmed Booking Exist Check
+        if ($event->userHasConfirmedBooking($user->id)) {
+            return back()->withErrors(['waitlist' => 'You already have a confirmed booking for this event.']);
+        }
+
+        //Current Waitlist Check 
+        if ($event->waitlists()->where('user_id', $user->id)->exists()) {
+            return back()->with('success', 'You are already on the waitlist.');
+        }
+
+        // Waitlist Position index 
+        $nextPos = (int) $event->waitlists()->max('position') + 1;
+
+        Waitlist::create([
+            'event_id' => $event->id,
+            'user_id'  => $user->id,
+            'position' => $nextPos,
+        ]);
+
+        return back()->with('success', 'Joined the waitlist.');
     }
 
     /**

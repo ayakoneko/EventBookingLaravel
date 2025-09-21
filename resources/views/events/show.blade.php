@@ -16,13 +16,16 @@
 
       @php
         // seats
-        $confirmed = $event->bookings()->where('status','confirmed')->count();
+        $confirmed = $event->confirmedBookings()->count();
         $remaining = max(0, ($event->capacity ?? 0) - $confirmed);
 
         // current user's booking for this event (if any)
-        $userBooking  = auth()->check() ? $event->bookings()->where('user_id', auth()->id())->latest()->first(): null;
+        $user       = auth()->user();
+        $userBooking = $user ? $event->bookings()->where('user_id', $user->id)->latest()->first() : null;
         $isConfirmed  = $userBooking && $userBooking->status === 'confirmed';
         $isCancelled  = $userBooking && $userBooking->status === 'cancelled';
+        $myWaitlist = $event->userWaitlistEntry(optional(auth()->user())->id);
+
       @endphp
 
       <div class="row g-3 mt-2">
@@ -99,7 +102,17 @@
                 </form>
                 
               @elseif ($remaining === 0)
-                <button class="btn btn-secondary disabled" disabled>NA-Event Full</button>
+                <!-- <button class="btn btn-secondary disabled" disabled>NA-Event Full</button> -->
+                @if(!$myWaitlist)
+                  <form method="POST" action="{{ route('waitlists.join', $event) }}">
+                    @csrf
+                    <button class="btn btn-outline-primary">Join waitlist</button>
+                  </form>
+                @else
+                  <button class="btn btn-secondary" disabled>
+                    You’re on the waitlist (pos #{{ $myWaitlist->position }})
+                  </button>
+                @endif
               
               @else
                 @if ($isCancelled)
