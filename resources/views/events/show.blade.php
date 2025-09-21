@@ -96,7 +96,7 @@
               @if ($isConfirmed)
                 <button class="btn btn-secondary disabled" disabled>Already Booked</button>
                 <form method="POST" action="{{ route('bookings.destroy', $userBooking) }}"
-                      onsubmit="return confirm('Cancel this booking?');">
+                      onsubmit="return confirm('Cancel your booking?\nIf the event has a waitlist, your seat will be offered to the next person and you may not be able to rebook.');">
                     {{csrf_field()}}
                     {{ method_field('DELETE') }}
                   <button class="btn btn-outline-danger btn-sm">Cancel</button>

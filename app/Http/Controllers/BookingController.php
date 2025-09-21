@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule; 
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Booking;
+use App\Models\Waitlist;     
+use App\Mail\WaitlistMail; 
 
 class BookingController extends Controller
 {
@@ -107,8 +110,21 @@ class BookingController extends Controller
                 ]);
             }
         });
-    
+
+        //Notify next waiting person by email
+        $event = $booking->event;
+        $first = Waitlist::where('event_id', $event->id) ->orderBy('position')->first();
+
+        if ($first) {
+            $first->update([
+                'notified_at' => now(),
+                'offer_expires_at' => now()->addDays(2)
+            ]);    
+
+            Mail::to($first->user->email)->send(new WaitlistMail($first));
+        }
+
         return back()->with('success', 'Booking cancelled.');    
     }
-}
 
+}
