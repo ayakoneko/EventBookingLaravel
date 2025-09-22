@@ -17,6 +17,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::view('/terms', 'auth.terms')->name('terms');
 Route::view('/policy', 'auth.policy')->name('policy');
 
 Route::middleware('auth')->group(function () {

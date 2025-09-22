@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'type'=> 'attendee', // Default user tyoe via form registration
+            'type'=> 'attendee', // Default user type via form registration
             'consented_at' => now(),
         ]);
 
@@ -48,6 +48,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('events.index', absolute: false));
     }
 }
