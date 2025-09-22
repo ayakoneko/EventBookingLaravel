@@ -15,17 +15,22 @@
       <h3>{{ $event->title }}</h3>
 
       @php
+        $user        = auth()->user();
+        $userId      = auth()->id();  
+
         // seats
         $confirmed = $event->confirmedBookings()->count();
         $remaining = max(0, ($event->capacity ?? 0) - $confirmed);
 
         // current user's booking for this event (if any)
-        $user       = auth()->user();
         $userBooking = $user ? $event->bookings()->where('user_id', $user->id)->latest()->first() : null;
         $isConfirmed  = $userBooking && $userBooking->status === 'confirmed';
         $isCancelled  = $userBooking && $userBooking->status === 'cancelled';
-        $myWaitlist = $event->userWaitlistEntry(optional(auth()->user())->id);
 
+        //waitlist and offer
+        $offer         = $event->activeOffer(); 
+        $userIsOfferee = $offer && $offer->user_id === $userId;
+        $myWaitlist    = $event->userWaitlistEntry($userId);
       @endphp
 
       <div class="row g-3 mt-2">
@@ -92,7 +97,8 @@
               </div>
               <div><a href="{{ route('waitlists.admin', $event) }}" class="btn btn-outline-secondary btn-sm">View Waitlist</a></div>
               
-            @elseif (auth()->user()->type === 'attendee')            
+            @elseif (auth()->user()->type === 'attendee')    
+              <!-- 1. User already booked -->
               @if ($isConfirmed)
                 <button class="btn btn-secondary disabled" disabled>Already Booked</button>
                 <form method="POST" action="{{ route('bookings.destroy', $userBooking) }}"
@@ -101,34 +107,69 @@
                     {{ method_field('DELETE') }}
                   <button class="btn btn-outline-danger btn-sm">Cancel</button>
                 </form>
-                
-              @elseif ($remaining === 0)
-                <!-- <button class="btn btn-secondary disabled" disabled>NA-Event Full</button> -->
-                @if(!$myWaitlist)
-                  <form method="POST" action="{{ route('waitlists.join', $event) }}">
-                    @csrf
-                    <button class="btn btn-outline-primary">Join waitlist</button>
-                  </form>
-                @else
-                  <button class="btn btn-secondary" disabled>
-                    You’re on the waitlist (pos #{{ $myWaitlist->position }})
-                  </button>
-                  <form method="POST" action="{{ route('waitlist.destroy', $event) }}"
-                      onsubmit="return confirm('Leave the waitlist? Your wait position will be reset.');">
-                    {{csrf_field()}}
-                    {{ method_field('DELETE') }}
-                  <button type="submit" class="btn btn-sm btn-danger"> Leave Waitlist </button>
-                </form>
-                @endif
               
-              @else
-                @if ($isCancelled)
-                  <button class="btn btn-secondary disabled" disabled>Cancelled</button>
-                @endif
+              <!-- 2. Active offer for user >> Clain seat-->
+              @elseif ($offer && $userIsOfferee)                
                 <form method="POST" action="{{ route('events.book', $event) }}">
                   {{csrf_field()}}      
-                  <button type="submit" class="btn btn-primary">Book Now</button>
-                </form>
+                  <button type="submit" class="btn btn-primary">Claim your seat (held until {{ $offer->offer_expires_at->format('D, M j, Y g:ia') }})</button>
+                </form>  
+              
+              <!-- 3. No active offer OR offer is for someone else-->
+              @else
+                <!-- 3a. Seats available and NO active offer >> normal booking-->
+                @if ($remaining > 0 && !$offer)                  
+                  @if ($isCancelled)
+                    <button class="btn btn-secondary disabled" disabled>Cancelled</button>
+                  @endif
+                  <form method="POST" action="{{ route('events.book', $event) }}">
+                    {{csrf_field()}}      
+                    <button type="submit" class="btn btn-primary">Book Now</button>
+                  </form>
+
+                <!-- 3b. Seats visible but offer is for someone else >> hold + waitlist-->
+                @elseif ($remaining > 0 && $offer && !$userIsOfferee)
+                  <div class="mb-2">
+                    <button class="btn btn-secondary" disabled>
+                      Seat held for waitlist until {{ $offer->offer_expires_at->format('D, M j, Y g:ia') }}
+                    </button>
+                  </div>
+                  @if(!$myWaitlist)
+                    <form method="POST" action="{{ route('waitlists.join', $event) }}">
+                      @csrf
+                      <button class="btn btn-outline-primary">Join waitlist</button>
+                    </form>
+                  @else
+                    <button class="btn btn-secondary" disabled>
+                      You’re on the waitlist (pos #{{ $myWaitlist->position }})
+                    </button>
+                    <form method="POST" action="{{ route('waitlist.destroy', $event) }}"
+                        onsubmit="return confirm('Leave the waitlist? Your wait position will be reset.');">
+                      {{csrf_field()}}
+                      {{ method_field('DELETE') }}
+                    <button type="submit" class="btn btn-sm btn-danger"> Leave Waitlist </button>
+                  </form>
+                  @endif
+                  
+                <!-- 3c. No seats (full) >> normal waitlist-->
+                @else
+                  @if(!$myWaitlist)
+                    <form method="POST" action="{{ route('waitlists.join', $event) }}">
+                      @csrf
+                      <button class="btn btn-outline-primary">Join waitlist</button>
+                    </form>
+                  @else
+                    <button class="btn btn-secondary" disabled>
+                      You’re on the waitlist (pos #{{ $myWaitlist->position }})
+                    </button>
+                    <form method="POST" action="{{ route('waitlist.destroy', $event) }}"
+                      onsubmit="return confirm('Leave the waitlist? Your wait position will be reset.');">
+                      {{csrf_field()}}
+                      {{ method_field('DELETE') }}
+                      <button type="submit" class="btn btn-sm btn-danger"> Leave Waitlist </button>
+                    </form>
+                  @endif    
+                @endif     
               @endif
             @endif
           @endauth

@@ -54,9 +54,21 @@ class BookingController extends Controller
         //     return back()->withErrors(['booking' => 'You already booked this event.']);
         // }
 
+        //Waitlist check 
+        $offer = $event->activeOffer();  // return only first non-expred offer
+        $userIsOfferee = $offer && $offer->user_id === $user->id;
+
         //Capacity Check 
-        if ($event->isFull()) {
+        if ($event->isFull() && !$userIsOfferee) {
             return back()->withErrors(['capacity' => 'Sorry, this event is full.']);
+        }
+
+        //Hold check
+        if ($offer && !$userIsOfferee) {
+            return back()->withErrors([
+                'capacity' => 'This seat is currently held for a waitlisted attendee until '
+                    . $offer->offer_expires_at->format('D, M j, Y g:ia') . '.'
+            ]);
         }
 
         // Reuse the event ID/user ID (cancelled and rebooked case)
@@ -70,9 +82,18 @@ class BookingController extends Controller
         $booking->ticket_code = $booking->ticket_code ?: Str::upper(Str::random(8));
         $booking->save();
 
+        // Remove the position if this person is coming from the waitlist
+        $entry = Waitlist::where('event_id', $event->id)->where('user_id', $user->id)->first();
+        if ($entry) {
+            $pos = $entry->position;
+            $entry->delete();
+        
+            Waitlist::where('event_id', $event->id) ->where('position', '>', $pos)->decrement('position');
+        }
+
         return redirect()->route('bookings.index')->with('success', 'Booking confirmed!');
     }
-
+    
     /**
      * Display the specified resource.
      */
@@ -113,15 +134,17 @@ class BookingController extends Controller
 
         //Notify next waiting person by email
         $event = $booking->event;
-        $first = Waitlist::where('event_id', $event->id) ->orderBy('position')->first();
+        if (!$event->activeOffer()) {
+            $first = Waitlist::where('event_id', $event->id) ->orderBy('position')->first();
 
-        if ($first) {
-            $first->update([
-                'notified_at' => now(),
-                'offer_expires_at' => now()->addDays(2)
-            ]);    
+            if ($first) {
+                $first->update([
+                    'notified_at' => now(),
+                    'offer_expires_at' => now()->addHours(2)
+                ]);    
 
-            Mail::to($first->user->email)->send(new WaitlistMail($first));
+                Mail::to($first->user->email)->send(new WaitlistMail($first));
+            }
         }
 
         return back()->with('success', 'Booking cancelled.');    

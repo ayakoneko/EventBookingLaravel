@@ -45,9 +45,13 @@ class WaitlistController extends Controller
     {
         $user = $request->user();
 
-        //Full Booking Check 
-        if (!$event->isFull()) {
-            return back()->withErrors(['waitlist' => 'Event is not full — you can book now.']);
+        //Full Booking Check (inc case seat is held for someone else)
+        $offer = $event->activeOffer();
+        $userIsOfferee = $offer && $offer->user_id === $user->id;
+        $remaining = max(0, ($event->capacity ?? 0) - $event->confirmedBookings()->count());
+
+        if (!($remaining === 0 || ($offer && !$userIsOfferee))) {
+            return back()->withErrors(['waitlist' => 'Seats are currently available — you can book now.']);
         }
 
         //Confirmed Booking Exist Check

@@ -34,6 +34,7 @@ class Event extends Model
     //2. if the event is full of booking
     //3. user already have a confirmed booking for the event
     //4. user’s waitlist row/model (can query later)
+    //5. active waitlist offer
 
     public function confirmedBookings() {
         return $this->bookings()->where('status', 'confirmed');
@@ -52,4 +53,9 @@ class Event extends Model
         if (!$userId) return null;
         return $this->waitlists()->where('user_id', $userId)->first();
     }
+
+    public function activeOffer(): ?Waitlist{
+        return $this->waitlists() ->whereNotNull('notified_at') ->where('offer_expires_at', '>', now()) ->orderBy('position') ->first();
+    }
+
 }
