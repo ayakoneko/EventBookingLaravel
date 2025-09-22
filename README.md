@@ -39,14 +39,19 @@ This system allows **Organisers** to create and manage events, while **Attendees
   - Consent checkbox required during registration.
   - Server-side validation ensures users must agree before account creation.
 
-### ✨ Advanced Requirements – Event Categories
-- **Organisers**
-  - Can assign one or more categories to an event when creating or updating it.
+### ✨ Advanced Requirements – Event Waiting List
 - **Attendees**
-  - Categories are displayed on event detail pages.
-  - Homepage includes a filter by category option.
-- **Database**
-  - Many-to-many relationship between `events` and `categories` using a pivot table.
+  - Can join a waitlist if an event is full.
+  - Can view which waitlists they are currently on.
+  - Can leave a waitlist at any time.
+- **Organisers**
+  - Can view the list of attendees on the waitlist for their events.
+- **Underlying Principles**
+  - **Data Persistence:** Waitlist records are stored reliably in the database.
+  - **Conditional UI:** Waitlist options are only shown when an event is full and the user is eligible to join.
+- **Advanced Feature**
+  - **Automated Notification:** When a booking is cancelled for a full event, the system automatically sends an email notification to the first attendee on the waitlist.  
+      - Tested using `Mail::fake()` and demonstrated via Laravel’s log mailer.
 
 ---
 
