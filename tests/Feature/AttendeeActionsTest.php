@@ -123,8 +123,8 @@ class AttendeeActionsTest extends TestCase
         // ensure the form passed validation
         $response->assertSessionHasNoErrors();
 
-        // app logs in and redirects to /dashboard after registration
-        $response->assertRedirect('/dashboard');
+        // app logs in and redirects to / (event list main page) after registration
+        $response->assertRedirectToRoute('events.index');
         
         $user = User::where('email', $email)->firstOrFail();
         $this->assertAuthenticatedAs($user); // <— exact user
