@@ -9,14 +9,14 @@
 
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- @guest {{-- will redirect to login if guest --}}
+        @guest {{-- will redirect to login if guest --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('events.create') }}">Create Event</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('bookings.index') }}">Find my tickets</a> {{--tickets.find--}}
-          </li>
-        @endguest -->
+              <a class="nav-link" href="{{ route('bookings.index') }}">My Bookings</a>
+            </li>
+        @endguest
 
         @auth
           @if(auth()->user()->type === 'organiser')
