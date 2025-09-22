@@ -49,7 +49,7 @@ class EventController extends Controller
         ],
         [
             'starts_at.after'   => 'The start time must be in the future.',
-            'ends_at.after'     => 'The end time must be after the start time.',
+            'ends_at.after_or_equal' => 'The end time must be after the start time.',
             'location.required_if'   => 'Location is required for in-person events.',
             'online_url.required_if' => 'Online URL is required when the event is online.',
         ]);
