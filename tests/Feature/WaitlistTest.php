@@ -21,35 +21,20 @@ class WaitlistTest extends TestCase
 
     /* =========================== Route helpers =========================== */
 
-    private function routeEventShow(Event $event): string
-    {
-        return route('events.show', $event);
-    }
-    private function routeWaitlistsIndex(): string
-    {
-        return route('waitlists.index');
-    }
-    private function routeWaitlistsAdmin(Event $event): string
-    {
-        return route('waitlists.admin', $event);
-    }
-    private function routeWaitlistsJoin(Event $event): string
-    {
-        return route('waitlists.join', $event);
-    }
-    private function routeWaitlistDestroy(Event $event): string
-    {
-        // note: singular in blade/routes
-        return route('waitlist.destroy', $event);
-    }
-    private function routeBook(Event $event): string
-    {
-        return route('events.book', $event);
-    }
-    private function routeCancel(Booking $booking): string
-    {
-        return route('bookings.destroy', $booking);
-    }
+    private function routeEventShow(Event $event): string { 
+        return route('events.show', $event);}
+    private function routeWaitlistsIndex(): string {        
+        return route('waitlists.index');}
+    private function routeWaitlistsAdmin(Event $event): string {
+        return route('waitlists.admin', $event);}
+    private function routeWaitlistsJoin(Event $event): string { 
+        return route('waitlists.join', $event); }
+    private function routeWaitlistDestroy(Event $event): string {  
+        return route('waitlists.destroy', $event); } 
+    private function routeBook(Event $event): string {  
+        return route('events.book', $event); }
+    private function routeCancel(Booking $booking): string {
+        return route('bookings.destroy', $booking); }
 
     /* =========================== Helpers ========================== */
 
@@ -92,27 +77,19 @@ class WaitlistTest extends TestCase
         });
     }
 
-    private function book(Event $event, User $user)
-    {
-        return $this->actingAs($user)->post($this->routeBook($event));
-    }
+    private function book(Event $event, User $user) {
+        return $this->actingAs($user)->post($this->routeBook($event)); }
 
-    private function cancel(Booking $booking, User $user)
-    {
-        return $this->actingAs($user)->delete($this->routeCancel($booking));
-    }
+    private function cancel(Booking $booking, User $user) {
+        return $this->actingAs($user)->delete($this->routeCancel($booking)); }
 
-    private function joinWaitlist(Event $event, User $user)
-    {
-        return $this->actingAs($user)->post($this->routeWaitlistsJoin($event));
-    }
+    private function joinWaitlist(Event $event, User $user) {
+        return $this->actingAs($user)->post($this->routeWaitlistsJoin($event)); }
 
-    private function leaveWaitlist(Event $event, User $user)
-    {
-        return $this->actingAs($user)->delete($this->routeWaitlistDestroy($event));
-    }
+    private function leaveWaitlist(Event $event, User $user) {
+        return $this->actingAs($user)->delete($this->routeWaitlistDestroy($event)); }
 
-    /* =========================== Core MUSTs ======================= */
+    /* =========================== Core Tests ======================= */
 
     public function test_join_waitlist_button_shows_only_when_event_is_full(): void
     {
@@ -260,7 +237,7 @@ class WaitlistTest extends TestCase
         $this->assertDatabaseMissing('waitlists', ['event_id' => $event->id, 'user_id' => $u2->id]);
     }
 
-    /* ======================= Mandatory Excellence: Mail & Offer Window ======================= */
+    /* ======================= Advanced Test ======================= */
 
     public function test_cancelling_confirmed_booking_notifies_first_waitlisted_and_sets_offer_window(): void
     {
