@@ -29,4 +29,21 @@ class RegistrationTest extends TestCase
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));
     }
+
+    public function test_user_cannot_register_without_agreeing_to_privacy_policy(): void
+    {
+        $response = $this->from('/register')->post('/register', [
+            'name' => 'Test User',
+            'email' => 'noprivacy@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            // omit consent
+        ]);
+
+        $response
+            ->assertRedirect('/register')
+            ->assertSessionHasErrors(['consent']);
+
+        $this->assertGuest();
+    }
 }
