@@ -88,8 +88,8 @@
           </div>
 
           @auth
-          <!-- Event's Organizer Only (Edit/Delete/View Waitlist buttons) -->
-            @if (auth()->id() === optional($event->organiser)->id)
+          <!-- Event's Organizer Only (3 actions buttons) -->
+            @if(auth()->user()->type === 'organiser' && auth()->id() === optional($event->organiser)->id)
               <div class="d-flex gap-2 justify-content-end mb-3">
                 <a href="{{ route('events.edit', $event) }}" class="btn btn-sm btn-primary"> Edit </a>
 
