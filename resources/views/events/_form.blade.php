@@ -13,12 +13,12 @@
 <div class="row mb-3">
   <div class="col">
     <label for="starts_at" class="form-label">Starts At</label>
-    <input type="datetime-local" name="starts_at" class="form-control" value="{{ old('starts_at', optional($ev->starts_at)->format('Y-m-d\TH:i')) }}" required>
+    <input type="datetime-local" name="starts_at" class="form-control" value="{{ old('starts_at', $event->starts_at ? $event->starts_at->format('Y-m-d\TH:i') : '') }}" required>
   </div>
 
   <div class="col">
     <label for="ends_at" class="form-label">Ends At</label>
-    <input type="datetime-local" name="ends_at" class="form-control" value="{{ old('ends_at', optional($ev->ends_at)->format('Y-m-d\TH:i')) }}">
+    <input type="datetime-local" name="ends_at" class="form-control" value="{{ old('ends_at', $event->ends_at ? $event->ends_at->format('Y-m-d\TH:i') : '') }}">
   </div>
 </div>
 

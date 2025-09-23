@@ -16,7 +16,7 @@ class Event extends Model
         'location', 'is_online','online_url',
         'capacity',
         'price_cents','currency',
-        'image_path',
+        'image_path','organiser_id',
     ];
 
     protected $casts = [

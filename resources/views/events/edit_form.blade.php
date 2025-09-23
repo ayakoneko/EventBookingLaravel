@@ -9,6 +9,16 @@
     <div class="card w-50 shadow-sm">
       <div class="card-body">
         <h2 class="card-title mb-4"> Edit Event</h2>
+        
+        @if ($errors->any())
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
 
         <form method="POST" action="{{ route('events.update', $event) }}">
           {{csrf_field()}}

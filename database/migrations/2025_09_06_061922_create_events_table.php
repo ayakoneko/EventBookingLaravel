@@ -29,7 +29,7 @@ return new class extends Migration
             $table->unsignedInteger('price_cents')->default(0); 
             $table->char('currency', 3)->default('AUD');
             
-            $table->string('image_path', 255)->nullable();
+            $table->string('image_path', 255)->nullable(); //currently relative path 
             $table->timestamps();
 
             // handy filters

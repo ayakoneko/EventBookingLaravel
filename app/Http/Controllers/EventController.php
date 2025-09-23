@@ -45,7 +45,7 @@ class EventController extends Controller
             'online_url'   => ['required_if:is_online,1','nullable', 'url', 'max:255'],
             'capacity'     => ['required', 'integer', 'between:1,1000'],
             'price_cents'  => ['required', 'integer', 'min:0'],
-            'image_path'   => ['nullable', 'string', 'max:255'],
+            'image_path'   => ['nullable', 'string', 'max:2048'],
         ],
         [
             'starts_at.after'   => 'The start time must be in the future.',
@@ -98,10 +98,10 @@ class EventController extends Controller
             'ends_at'      => ['nullable', 'date', 'date_format:Y-m-d\TH:i', 'after_or_equal:starts_at'],
             'is_online'    => ['required', 'in:0,1'],
             'location'     => ['required_if:is_online,0', 'nullable', 'string', 'max:255'],
-            'online_url'   => ['required_if:is_online,1','url', 'string', 'max:255'],
+            'online_url'   => ['required_if:is_online,1', 'nullable', 'url', 'max:255'],
             'capacity'     => ['required', 'integer', 'between:1,1000'],
             'price_cents'  => ['required', 'integer', 'min:0'],
-            'image_path'   => ['nullable', 'string', 'max:255'],
+            'image_path'   => ['nullable', 'string', 'max:2048'],
         ],
         [
             'starts_at.after'   => 'The start time must be in the future.',
