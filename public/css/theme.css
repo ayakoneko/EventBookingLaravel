@@ -1,21 +1,22 @@
 /* Color Theme Overrides */
    :root{
-    --eb-nav:   #1E2A38;   /* navbar bg + important text */
-    --eb-bg:    #F5EFE6;   /* page background */
-    --eb-accent:#6D94C5;   /* primary button / links */
-    --eb-text:  #1E2A38;   /* default dark text */
-    --eb-accent-600: #5a82b3; /* hover shade for accent */
+    --eb-bg:         #F5EFE6;   /* page background */
+    --eb-text:       #1E2A38;   /* default dark text + links + nav bg */
+    --eb-accent:     #6D94C5;   /* primary button */
+    --eb-accent-600: #5a82b3;   /* hover shade for accent */
+    --eb-alert:      #B94A48;   /* alert */
   }
   
   body{background-color: var(--eb-bg); color: var(--eb-text);}
   h1, h2, h3, h4{color: var(--eb-text);}
-  
+  .alert {color:var(--eb-alert); }
+    
   /* Navbar */
-  .navbar{background-color: var(--eb-nav) !important;}
+  .navbar{background-color: var(--eb-text) !important;}
   .navbar .navbar-brand, .navbar .nav-link, .navbar .navbar-text{color: #fff !important;}
   
   /* Links & Pagination */
-  a, .page-link{color: var(--eb-accent);}
+  a, .page-link{color: var(--eb-text);}
   a:hover, .page-link:hover{ text-decoration: underline;}
   .page-link:focus{box-shadow: none; outline: 0;}
 
@@ -25,49 +26,8 @@
   .btn-outline-primary{border-color: var(--eb-accent); color: var(--eb-accent);}
   .btn-outline-primary:hover{background-color: var(--eb-accent); border-color: var(--eb-accent); color: #fff; }
   
-  /* Event cards */
-  a.event-card-link:hover .card {
-    transform: translateY(-5px) !important;
-    box-shadow: 0px 8px 20px rgba(156, 39, 176, 0.3) !important;
-  }
-
-  .event-card{
-    border-radius: 100px;
-    overflow: hidden;
-    background: #fff;
-    transition: transform .18s ease, box-shadow .18s ease;
-    box-shadow: 0 1px 4px rgba(0,0,0,.06);
-  }
-  .event-card:hover{
-    transform: translateY(-4px);
-    box-shadow: 0 12px 26px rgba(109,148,197,.35); /* accent glow */
-  }
-  
-  /* Make whole card clickable without blue link style */
-  a.event-card-link{
-    display:block;
-    text-decoration:none;
-    color: inherit;
-  }
-  
-  /* Keep existing image sizing; rounded top via card overflow hidden */
-  .event-list-img{
-    height: 200px;
-    object-fit: cover;
-    width: 100%;
-    display:block;
-  }
-  
-  /* Remaining seats badge */
-  .badge-seats{
-    display:inline-block;
-    padding:.25rem .6rem;
-    border-radius:9999px;
-    font-weight:600;
-    font-size:.85rem;
-    background: var(--eb-accent);
-    color:#fff;
-  }
-  .badge-seats.medium{ background: var(--eb-accent-600); }
-  .badge-seats.low{ background:#b03a2e; }  /* optional: stronger alert color */
-  
+  /* Cards & Event Images */
+  .card {border-radius: 0.5rem;}
+  .card:hover{transform: translateY(-4px); box-shadow: 0 12px 26px #6D94C559; }
+  .event-list-img {width: 100%; height: 200px; object-fit: cover; border-radius: 0.5rem; }
+  .event-detail-img {width: 100%; height: 400px; object-fit: cover; object-position: top center; border-radius: 0.5rem; }

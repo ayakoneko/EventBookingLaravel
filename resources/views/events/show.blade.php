@@ -23,7 +23,7 @@
         $remaining = max(0, ($event->capacity ?? 0) - $confirmed);
 
         // current user's booking for this event (if any)
-        $userBooking = $user ? $event->bookings()->where('user_id', $user->id)->latest()->first() : null;
+        $userBooking  = $user ? $event->bookings()->where('user_id', $user->id)->latest()->first() : null;
         $isConfirmed  = $userBooking && $userBooking->status === 'confirmed';
         $isCancelled  = $userBooking && $userBooking->status === 'cancelled';
 
@@ -33,13 +33,14 @@
         $myWaitlist    = $event->userWaitlistEntry($userId);
       @endphp
 
-      <div class="row g-3 mt-2">
+      <div class="row g-3">
+        <!-- Event Details (Time, Location, Capacity, Organizer) -->
         <div class="col-md-6">
           <div class="mb-2">
             <strong>When:</strong>
               {{ $event->starts_at->format('D, M j, Y g:ia') }} 
               @if ($event->ends_at)
-                – {{ $event->ends_at->format('D, M j, Y g:ia') }}
+                - {{ $event->ends_at->format('D, M j, Y g:ia') }}
               @endif
           </div>
 
@@ -62,8 +63,10 @@
           </div>
         </div>
 
+        <!-- Badges and Buttons -->
         <div class="col-md-6 text-end">
           <div class="d-inline-block">
+            <!-- Price Badge -->
             <span class="badge bg-light text-dark fs-5">
               @if($event->price_cents == 0)
                 Free
@@ -72,6 +75,7 @@
               @endif
             </span>
 
+            <!-- Remaining Seat Badge with text effects -->
             <span class="fs-6 {{ $remaining === 0 ? 'text-danger' : ($remaining <= 5 ? 'text-warning' : 'text-muted') }}">
               @if($remaining === 0)
                 Full
@@ -84,6 +88,7 @@
           </div>
 
           @auth
+          <!-- Event's Organizer Only (Edit/Delete/View Waitlist buttons) -->
             @if (auth()->id() === optional($event->organiser)->id)
               <div class="d-flex gap-2 justify-content-end mb-3">
                 <a href="{{ route('events.edit', $event) }}" class="btn btn-sm btn-primary"> Edit </a>
@@ -92,11 +97,15 @@
                       onsubmit="return confirm('Delete this event? This cannot be undone.');">
                     {{csrf_field()}}
                     {{ method_field('DELETE') }}
-                  <button type="submit" class="btn btn-sm btn-danger"> Delete </button>
+                  <button type="submit" class="btn btn-sm btn-outline-danger"> Delete </button>
                 </form>
               </div>
-              <div><a href="{{ route('waitlists.admin', $event) }}" class="btn btn-outline-secondary btn-sm">View Waitlist</a></div>
-              
+
+              <div>
+                <a href="{{ route('waitlists.admin', $event) }}" class="btn btn-outline-secondary btn-sm">View Waitlist</a>
+              </div>
+         
+          <!-- Attendee Only (Book/Cancel/Waitlist buttons) -->
             @elseif (auth()->user()->type === 'attendee')    
               <!-- 1. User already booked -->
               @if ($isConfirmed)
@@ -107,12 +116,12 @@
                     {{ method_field('DELETE') }}
                   <button class="btn btn-outline-danger btn-sm">Cancel</button>
                 </form>
-              
+                        
               <!-- 2. Active offer for user >> Clain seat-->
               @elseif ($offer && $userIsOfferee)                
                 <form method="POST" action="{{ route('events.book', $event) }}">
                   {{csrf_field()}}      
-                  <button type="submit" class="btn btn-primary">Claim your seat (held until {{ $offer->offer_expires_at->format('D, M j, Y g:ia') }})</button>
+                  <button type="submit" class="btn btn-primary"> Claim your seat (held until {{ $offer->offer_expires_at->format('D, M j, Y g:ia') }}) </button>
                 </form>  
               
               <!-- 3. No active offer OR offer is for someone else-->
@@ -141,13 +150,13 @@
                     </form>
                   @else
                     <button class="btn btn-secondary" disabled>
-                      You’re on the waitlist (pos #{{ $myWaitlist->position }})
+                      You're on the waitlist (pos #{{ $myWaitlist->position }})
                     </button>
-                    <form method="POST" action="{{ route('waitlist.destroy', $event) }}"
+                    <form method="POST" action="{{ route('waitlists.destroy', $event) }}"
                         onsubmit="return confirm('Leave the waitlist? Your wait position will be reset.');">
                       {{csrf_field()}}
                       {{ method_field('DELETE') }}
-                    <button type="submit" class="btn btn-sm btn-danger"> Leave Waitlist </button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger"> Leave Waitlist </button>
                   </form>
                   @endif
                   
@@ -160,9 +169,9 @@
                     </form>
                   @else
                     <button class="btn btn-secondary" disabled>
-                      You’re on the waitlist (pos #{{ $myWaitlist->position }})
+                      You're on the waitlist (pos #{{ $myWaitlist->position }})
                     </button>
-                    <form method="POST" action="{{ route('waitlist.destroy', $event) }}"
+                    <form method="POST" action="{{ route('waitlists.destroy', $event) }}"
                       onsubmit="return confirm('Leave the waitlist? Your wait position will be reset.');">
                       {{csrf_field()}}
                       {{ method_field('DELETE') }}
@@ -179,9 +188,9 @@
 
     @if(!empty($event->description))
       <hr>
-      <div class="mt-2">
-      <strong>Event Description:</strong></br>
-          {{$event->description}}
+      <div class="mt-2 px-4">
+        <strong>Event Description:</strong><br>
+        <p class="ms-4">{{ $event->description }}</p>
       </div>
      @endif
   </div>

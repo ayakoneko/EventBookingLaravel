@@ -37,5 +37,4 @@
       @endforelse
     </tbody>
   </table>
-  
 @endsection

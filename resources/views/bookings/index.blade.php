@@ -19,18 +19,20 @@
     <ul class="list-group">
       @foreach ($bookings as $booking)
         <li class="list-group-item d-flex justify-content-between align-items-center">
+          <!-- Lef: Event details -->
           <div>
             <a href="{{ route('events.show', $booking->event) }}"> {{ $booking->event->title }} </a>
             <div class="text-muted">
               {{ $booking->event?->starts_at?->format('D, M j, Y g:ia') }}
               @if ($booking->event?->ends_at)
-                – {{ $booking->event->ends_at->format('D, M j, Y g:ia') }}
+                - {{ $booking->event->ends_at->format('D, M j, Y g:ia') }}
               @endif
             </div>
             <div>
               <small>Location: {{ $booking->event->location }}</small>
             </div>            
           </div>
+          <!-- Right: Ticket Code and Booking Status -->
           <div>
           @if($booking->ticket_code)
             <small>Ticket: {{ $booking->ticket_code }}</small>
@@ -40,7 +42,9 @@
         </li>
       @endforeach
     </ul>
-    <div class="mt-3">{{ $bookings->links() }}</div> 
+    
+    <!-- for pagination -->
+    <div class="mt-4">{{ $bookings->links() }}</div> 
   @endif
 </div>
 @endsection

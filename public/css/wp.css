@@ -30,7 +30,7 @@ a:visited { text-decoration: none; }
 a:active { text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-.alert { font-weight: bold; font-style: italic; color: red; }
+.alert { font-weight: bold; font-style: italic; color:red; }
 
 .eg { 
     font-family: Monaco, Courier, "Courier New", monospace;
@@ -42,16 +42,3 @@ a:hover { text-decoration: underline; }
 
 .antispam { display:none;}
 
-.event-list-img {
-    height: 200px;         
-    object-fit: cover;     
-    width: 100%;           
-}
-
-.event-detail-img {
-    width: 100%;       
-    height: 400px;       
-    object-fit: cover;
-    object-position: top center; 
-    border-radius: 0.5rem;
-}

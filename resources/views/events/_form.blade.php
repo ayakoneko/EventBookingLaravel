@@ -1,5 +1,6 @@
 @php($ev = $event ?? null)
 
+<!-- Title and Description -->
 <div class="mb-3">
   <label for="title" class="form-label">Title</label>
   <input type="text" name="title" class="form-control" maxlength="100" value="{{ old('title', $ev->title ?? '') }}" required>
@@ -10,6 +11,7 @@
   <textarea name="description" class="form-control" maxlength="1000" rows="3">{{ old('description', $ev->description ?? '') }}</textarea>
 </div>
 
+<!-- Time (Starts at & Ends at) -->
 <div class="row mb-3">
   <div class="col">
     <label for="starts_at" class="form-label">Starts At</label>
@@ -22,6 +24,7 @@
   </div>
 </div>
 
+<!-- Venue (Location and Online URL) -->
 <div class="mb-3">
   <label>Online Venue</label>
   <input type="hidden" name="is_online" value="0">
@@ -40,6 +43,7 @@
   </div>
 </div>
 
+<!-- Capacity & Price(in cents) -->
 <div class="row mb-3">
   <div class="col">
     <label for="capacity" class="form-label">Capacity (1~1000)</label>
@@ -51,6 +55,7 @@
   </div>
 </div>
 
+<!-- Images -->
 <div class="mb-3">
   <label for="image_path" class="form-label">Event Image (if applicable)</label>
   <input type="text" name="image_path" class="form-control" maxlength="255" value="{{ old('image_path', $ev->image_path ?? '') }}">

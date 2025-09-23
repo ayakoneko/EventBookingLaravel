@@ -17,21 +17,25 @@
           <img src="{{ asset($event->image_path) }}"{{-- expects 'images/Filename.png' --}} class="event-list-img" alt="{{ $event->title }}">
             
           <div class="card-body d-flex flex-column">
-            <h5 class="card-title mb-2 text-truncate" title="{{ $event->title }}">{{ $event->title }}</h5>
+            <h5 class="card-title mb-2" title="{{ $event->title }}">{{ $event->title }}</h5>
+            
             <div class="small text-muted">
-              <div>{{ $event->starts_at->format('D, M j, Y g:ia') }}</div>
-              <div class="text-truncate"> {{$event->location}}</div>
+              <div> {{ $event->starts_at->format('D, M j, Y g:ia') }}</div>
+              <div> {{ $event->location }}</div>
             </div>
 
-            <a href="{{ route('events.show', $event) }}" class="stretched-link mt-auto">Details</a>
+            <a href="{{ route('events.show', $event) }}" class="stretched-link mt-auto"> Details </a>
 
           </div>
         </div>
       </div>
     @endforeach
   </div>
+
+  <!-- for pagination -->
   <div class="mt-4">
     {{ $events->links() }}
-</div>
+  </div>
+
 </div>
 @endsection

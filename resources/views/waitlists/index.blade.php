@@ -18,29 +18,33 @@
     <ul class="list-group">
       @foreach ($waitlists as $waitlist)
         <li class="list-group-item d-flex justify-content-between align-items-center">
+          <!-- Left: Event Details -->
           <div>
             <a href="{{ route('events.show', $waitlist->event) }}"> {{ $waitlist->event->title }} </a>
             <div class="text-muted">
               {{ $waitlist->event?->starts_at?->format('D, M j, Y g:ia') }}
               @if ($waitlist->event?->ends_at)
-                – {{ $waitlist->event->ends_at->format('D, M j, Y g:ia') }}
+                - {{ $waitlist->event->ends_at->format('D, M j, Y g:ia') }}
               @endif
             </div>
             <div>
               <small>Location: {{ $waitlist->event->location }}</small>
             </div>            
           </div>
+          <!-- Waitlist Details (Expiry and Position) -->
           <div>
             @if($waitlist->notified_at)
               Offer expires: {{ $waitlist->offer_expires_at->format('D, M j, Y g:ia')}}
             @else
-              Position #{{ $waitlist->position }}
+              Position: {{ $waitlist->position }}
             @endif  
           </div>  
         </li>
       @endforeach
     </ul>
-    <div class="mt-3">{{ $waitlists->links() }}</div> 
+    
+    <!-- for pagination -->
+    <div class="mt-4">{{ $waitlists->links() }}</div> 
   @endif
 </div>
 @endsection
