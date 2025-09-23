@@ -1,6 +1,6 @@
-<x-guest-layout :containerClass="'w-full md:w-1/2 mt-6 px-6 py-4 mx-auto bg-white rounded-lg shadow-md p-6'">
-    <h1 class="text-4xl font-bold mb-4">Terms of Use</h1>
-    <p class="text-sm text-gray-600 mb-6">
+<x-guest-layout :containerClass="'w-1/2 mt-6 px-6 py-4 mx-auto bg-white rounded-lg shadow-md p-6'">
+<h1 class="text-xl font-semibold mb-2 text-center">Terms of Use</h1>
+    <p class="text-sm text-gray-600 mb-6 text-center border-b-2 border-gray-300 pb-2">
         <em>Last updated: {{ now()->format('Y M d') }}</em>
     </p>
 
