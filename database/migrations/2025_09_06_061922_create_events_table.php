@@ -20,7 +20,6 @@ return new class extends Migration
             $table->dateTime('starts_at'); // must be future date
             $table->dateTime('ends_at')->nullable(); 
 
-            
             $table->boolean('is_online')->default(0);
             $table->string('location', 255);
             $table->string('online_url')->nullable();

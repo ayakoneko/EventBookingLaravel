@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserTableSeeder::class,
             EventTableSeeder::class,
-            // BookingTableSeeder::class, // (later)
         ]);
     }
 }
