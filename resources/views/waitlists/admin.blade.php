@@ -6,7 +6,8 @@
 
 @section('content')
 <div class="container py-4">
-  <h2 class="mb-3">Waitlist — {{ $event->title }}</h2>
+  <a href="{{ url('/') }}" class="btn btn-link px-0 mb-3">&larr; Back to Events List</a>
+  <h2 class="mb-3">Waitlist — {{ $event->title }}</h2> 
   
   <div class="mb-3 text-muted">
     Capacity: {{ $event->capacity }} · Confirmed: {{ $event->confirmed_bookings_count }} · On waitlist: {{ $event->waitlists_count }}

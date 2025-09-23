@@ -6,6 +6,7 @@
 
 @section('content')
 <div class="container py-4">
+  <a href="{{ url('/') }}" class="btn btn-link px-0 mb-3">&larr; Back to Events List</a>
   <h2 class="mb-3">Organizer Dashboard - ({{ count($report) }} events)</h2>
   
   <table class="table table-striped mt-3">

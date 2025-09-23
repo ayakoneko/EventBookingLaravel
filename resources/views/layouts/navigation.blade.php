@@ -1,7 +1,9 @@
 {{-- resources/views/layouts/partials/bootstrap-nav.blade.php --}}
 <nav class="navbar navbar-expand-lg bg-white border-bottom">
   <div class="container">
-    <a class="navbar-brand" href="{{ route('events.index') }}">EventBooking</a>
+    <a class="navbar-brand" href="{{ route('events.index') }}">
+      <img src="{{ asset('images/logo.png') }}" alt="Logo" width="30" height="30" class="me-2">
+      EventBooking</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

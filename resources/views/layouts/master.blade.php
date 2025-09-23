@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/wp.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+
   </head>
   
   <body>    
