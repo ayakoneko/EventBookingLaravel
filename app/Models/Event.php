@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * The Event model captures schedule, venue, capacity and pricing,
+ * and ties each event to an organiser for ownership and access control.
+ */
+
 class Event extends Model
 {
     use HasFactory;
@@ -25,16 +30,25 @@ class Event extends Model
         'is_online' => 'boolean'
     ];
     
+    /**
+     * Relationship:
+     * Organiser who owns/manages this event 
+     * One-to-many of event bookings
+     * One-to-many ordered waitlist
+     */
     public function organiser() { return $this->belongsTo(User::class, 'organiser_id'); }
     public function bookings() { return $this->hasMany(Booking::class); }
     public function waitlists() { return $this->hasMany(Waitlist::class)->orderBy('position'); }
 
-    //Helper for Confirmed Booking
-    //1. if booking is confirmed
-    //2. if the event is full of booking
-    //3. user already have a confirmed booking for the event
-    //4. user’s waitlist row/model (can query later)
-    //5. active waitlist offer
+
+    /**
+     *Helper for Confirmed Booking
+    * 1. Query filtered to 'confirmed'.
+    * 2. Bool True when confirmed bookings >= capacity.
+    * 3. Bool True if the user has a confirmed booking for this event.
+    * 4. The user's waitlist row or null if absent.
+    * 5. The top active offer or null if none.
+    */
 
     public function confirmedBookings() {
         return $this->bookings()->where('status', 'confirmed');

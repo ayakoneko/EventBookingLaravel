@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * The User model represents both organisers and attendees.
+ *
+ * Authorisation is role-driven via the 'type' attribute; relationships expose
+ * owned events and participation in bookings/waitlists.
+ */
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -14,8 +21,6 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -23,6 +28,12 @@ class User extends Authenticatable
         'password',
     ];
 
+    /**
+     * Relationship:
+     * One-to-many of events the user owns (Organizer ID)
+     * One-to-many of the user's bookings
+     * One-to-many of the user's waitlists
+     */
     public function events() { return $this->hasMany(Event::class, 'organiser_id');}
     public function bookings() { return $this->hasMany(Booking::class); }
     public function waitlists() { return $this->hasMany(Waitlist::class); }
@@ -30,8 +41,6 @@ class User extends Authenticatable
 
     /**
      * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -40,8 +49,6 @@ class User extends Authenticatable
 
     /**
      * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
      */
     protected function casts(): array
     {
