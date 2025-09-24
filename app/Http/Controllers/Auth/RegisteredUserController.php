@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'consent'  => ['accepted'],
+            'consent'  => ['accepted'], // must accept terms & privacy policy
         ]);
 
         $user = User::create([
@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'type'=> 'attendee', // Default user type via form registration
-            'consented_at' => now(),
+            'consented_at' => now(), // record timestamp for compliance
         ]);
 
         event(new Registered($user));

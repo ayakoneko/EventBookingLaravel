@@ -17,7 +17,10 @@ use App\Mail\WaitlistMail;
 class BookingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List the authenticated user's bookings with event context.
+     *
+     * @param  Request $request Current HTTP request (for auth user).
+     * @return View    Bookings index view with pagination.
      */
     public function index(Request $request)
     {
@@ -34,13 +37,22 @@ class BookingController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create/confirm a booking for the given event by the current user.
+     *
+     * Enforces uniqueness per (event,user) for confirmed bookings, respects capacity,
+     * and honours active waitlist holds (offers) before general availability.
+     *
+     * @param  Request $request HTTP request (auth user inferred).
+     * @param  Event   $event   Route-model-bound target event.
+     * @return RedirectResponse Redirects to bookings list on success/failure with flash.     *
+     * @throws ValidationException On duplicate confirmed booking.
      */
     public function store(Request $request, Event $event)
     {
         $user = $request->user();
 
-        //Duplicate Check 
+        // Duplicate Check 
+        // Prevent duplicate confirmed bookings for the same event.
         $request->merge(['user_id' => $user->id]);
         $request->validate([
             'user_id' => [
@@ -49,21 +61,20 @@ class BookingController extends Controller
             ],
         ], ['user_id.unique' => 'You already booked this event.']);
 
-        // $already = Booking::where('event_id', $event->id)->where('user_id', $user->id)->exists();
-        // if ($already) {
-        //     return back()->withErrors(['booking' => 'You already booked this event.']);
-        // }
 
-        //Waitlist check 
+        // Waitlist check 
+        // Respect active waitlist offers: only the offeree may book during the hold window.
         $offer = $event->activeOffer();  // return only first non-expred offer
         $userIsOfferee = $offer && $offer->user_id === $user->id;
 
-        //Capacity Check 
+        // Capacity Check 
+        // Capacity gate for everyone except the current offeree.
         if ($event->isFull() && !$userIsOfferee) {
             return back()->withErrors(['capacity' => 'Sorry, this event is full.']);
         }
 
-        //Hold check
+        // Hold check
+        // Seat is temporarily held for someone else.
         if ($offer && !$userIsOfferee) {
             return back()->withErrors([
                 'capacity' => 'This seat is currently held for a waitlisted attendee until '
@@ -119,7 +130,13 @@ class BookingController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Cancel a booking and notify the next person on the waitlist (if any).
+     *
+     * Uses a short transaction for the status flip, then promotes the head
+     * of the waitlist by sending a time-bound offer email.
+     *
+     * @param  Booking $booking Route-model-bound booking to cancel.
+     * @return RedirectResponse Redirects back with flash message.
      */
     public function destroy(Booking $booking)
     {
@@ -132,7 +149,7 @@ class BookingController extends Controller
             }
         });
 
-        //Notify next waiting person by email
+        // Promote waitlist only if no active offer currently exists (Email Notification)
         $event = $booking->event;
         if (!$event->activeOffer()) {
             $first = Waitlist::where('event_id', $event->id) ->orderBy('position')->first();

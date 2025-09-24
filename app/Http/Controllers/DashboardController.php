@@ -11,7 +11,13 @@ use App\Models\Booking;
 class DashboardController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Show organiser dashboard with per-event rollups.
+     *
+     * Uses a compact aggregate query (Raw SQL) for capacity, confirmed bookings,
+     * and waitlist counts to power organiser insights.
+     *
+     * @param  Request $request Current HTTP request (auth user inferred).
+     * @return View    Dashboard view with aggregated report.
      */
     public function index(Request $request)
     {

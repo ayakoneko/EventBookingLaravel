@@ -8,10 +8,13 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Booking;
 
+
+
 class EventController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List upcoming events in ascending start order with pagination.
+     * @return View Rendered events index view.
      */
     public function index()
     {
@@ -21,7 +24,8 @@ class EventController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the event creation form.
+     * @return View Rendered event creation view.
      */
     public function create()
     {
@@ -31,7 +35,14 @@ class EventController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created event owned by the current organiser.
+     *
+     * Validates time window, format-specific fields (location/URL), and capacity,
+     * then assigns organiser ownership to the authenticated user.
+     *
+     * @param  Request $request Incoming request with form data.
+     * @return RedirectResponse Redirects to the event details on success.     *
+     * @throws ValidationException On invalid input.
      */
     public function store(Request $request)
     {
@@ -54,18 +65,22 @@ class EventController extends Controller
             'online_url.required_if' => 'Online URL is required when the event is online.',
         ]);
         
+        // If online, normalise the location for consistent display/filtering.
         if ($request->boolean('is_online')) {
             $validated['location'] = 'Online';
         }
 
-        $validated['organiser_id'] = Auth::id(); // owner = current user
+        // Ownership: created by the currently authenticated organiser.
+        $validated['organiser_id'] = Auth::id(); 
 
         $event = Event::create($validated);
         return redirect()->route('events.show', $event) ->with('success', 'Event created.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the event details page.     *
+     * @param  Event $event Route-model-bound event instance.
+     * @return View  Rendered event details view.
      */
     public function show(Event $event)
     {
@@ -73,7 +88,12 @@ class EventController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the edit form for an event the current user owns.
+     *
+     * Authorisation: organiser-only and owner-only.
+     *
+     * @param  Event $event Event to edit.
+     * @return View  Rendered edit form view.
      */
     public function edit(Event $event)
     {
@@ -84,7 +104,15 @@ class EventController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing event owned by the current organiser.
+     * 
+     * Authorisation: organiser-only and owner-only.
+     * Enforces the same validation rules as creation; keeps ownership unchanged.
+     *
+     * @param  Request $request Incoming request with updated data.
+     * @param  Event   $event   Event to update.
+     * @return RedirectResponse Redirects to the event details on success.     *
+     * @throws ValidationException On invalid input.
      */
     public function update(Request $request, Event $event)
     {
@@ -119,7 +147,13 @@ class EventController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an event if it has no bookings and belongs to the current organiser.
+     *
+     * Authorisation: organiser-only and owner-only.
+     * Business rule: events with any bookings are immutable to preserve audit history.
+     *
+     * @param  Event $event Event to delete.
+     * @return RedirectResponse Redirects to events index with flash status.
      */
     public function destroy(Event $event)
     {

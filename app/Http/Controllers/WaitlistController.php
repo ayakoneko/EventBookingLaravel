@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Auth;
 class WaitlistController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List the authenticated user's waitlist entries with event context.
+     *
+     * @param  Request $request Current HTTP request (auth user inferred).
+     * @return View    Waitlists index view with pagination.
      */
     public function index(Request $request)
     {
@@ -18,7 +21,15 @@ class WaitlistController extends Controller
         return view('waitlists.index', ['waitlists' => $waitlists]);
     }
 
-    // organizer only - view all the attendees on the waitlsit for any of their specific events
+    /**
+     * Organiser-only: view the full waitlist for one of their events.
+     *
+     * Authorisation: organiser must own the event.
+     *
+     * @param  Request $request Current HTTP request (auth user inferred).
+     * @param  Event   $event   Event whose waitlist to inspect.
+     * @return View    Admin waitlist view with counts and queue.
+     */
     public function admin(Request $request, Event $event)
     {
         //creator-only
@@ -39,7 +50,15 @@ class WaitlistController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Join the waitlist for an event when seats are unavailable or held.
+     *
+     * Prevents join when seats are available (encourages immediate booking),
+     * blocks duplicates and conflicts with existing confirmed bookings,
+     * and assigns the next queue position.
+     *
+     * @param  Request $request Current HTTP request (auth user inferred).
+     * @param  Event   $event   Event to join the waitlist for.
+     * @return RedirectResponse Redirects back with outcome message.
      */
     public function store(Request $request, Event $event)
     {
@@ -101,7 +120,14 @@ class WaitlistController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Leave the waitlist for a given event and compact queue positions.
+     *
+     * Removes the current user's waitlist row and shifts all subsequent
+     * entries up by one to keep the queue contiguous.
+     *
+     * @param  Request $request Current HTTP request (auth user inferred).
+     * @param  Event   $event   Event to leave the waitlist for.
+     * @return RedirectResponse Redirects back with success message.
      */
     public function destroy(Request $request, Event $event)
     {
