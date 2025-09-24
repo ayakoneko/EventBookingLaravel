@@ -10,12 +10,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
+
+/**
+ * Notification email sent to a user on a waitlist when a spot becomes available.
+ * Encapsulates subject, body content, and view data for rendering the waitlist offer.
+ */
+
 class WaitlistMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
+     * The waitlist entry driving this notification.
      */
     public function __construct(public Waitlist $waitlist)
     {
@@ -24,6 +31,9 @@ class WaitlistMail extends Mailable
 
     /**
      * Get the message envelope.
+     * 
+     * Subject line includes the event title so recipients can quickly
+     * identify which waitlist offer this relates to.
      */
     public function envelope(): Envelope
     {
@@ -34,6 +44,9 @@ class WaitlistMail extends Mailable
 
     /**
      * Get the message content definition.
+     * 
+     * Supplies the event, waitlist, and a direct link to the event details
+     * so recipients can respond promptly to the offer.
      */
     public function content(): Content
     {
