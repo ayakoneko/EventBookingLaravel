@@ -13,7 +13,7 @@
   <body>    
     @include('layouts.navigation')
 
-    {{-- Flash messages --}}
+    {{-- Flash messages (success/error feedback from controllers) --}}
     <div class="container mt-3">
       @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

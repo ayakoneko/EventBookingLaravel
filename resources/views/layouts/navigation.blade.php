@@ -11,6 +11,7 @@
 
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Guest Only Menu Options -->
         @guest {{-- will redirect to login if guest --}}
           <li class="nav-item">
             <a class="nav-link" href="{{ route('events.create') }}">Create Event</a>
@@ -21,13 +22,15 @@
         @endguest
 
         @auth
+          <!-- Organizer Only Menu Options -->
           @if(auth()->user()->type === 'organiser')
             <li class="nav-item">
               <a class="nav-link" href="{{ route('events.create') }}">Create Event</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ route('organiser.dashboard') }}">Event Dashboard</a>
-            </li>            
+            </li>   
+          <!-- Attendee Only Menu Options -->         
           @else
             <li class="nav-item">
               <a class="nav-link" href="{{ route('bookings.index') }}">My Bookings</a>
@@ -39,6 +42,7 @@
         @endauth
       </ul>
 
+      <!-- Right side: Auth actions (Login/Register or Dashboard/Logout) -->
       <ul class="navbar-nav ms-auto">
         @guest
           <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Log in</a></li>
