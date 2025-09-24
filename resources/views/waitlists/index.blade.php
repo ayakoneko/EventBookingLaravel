@@ -8,6 +8,7 @@
 <div class="container py-4">
   <h2 class="mb-3">My Waitlists</h2>
   
+  {{-- Surface the first validation/flow error if present --}}
   @if ($errors->any())
     <div class="alert alert-danger">{{ $errors->first() }}</div>
   @endif

@@ -9,6 +9,7 @@
   <a href="{{ url('/') }}" class="btn btn-link px-0 mb-3">&larr; Back to Events List</a>
   <h2 class="mb-3">My Bookings</h2>
   
+  {{-- Surface the first validation/flow error if present --}}
   @if ($errors->any())
     <div class="alert alert-danger">{{ $errors->first() }}</div>
   @endif

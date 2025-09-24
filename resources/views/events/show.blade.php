@@ -88,7 +88,7 @@
           </div>
 
           @auth
-          <!-- Event's Organizer Only (3 actions buttons) -->
+          <!-- Organiser actions (owner only) -->
             @if(auth()->user()->type === 'organiser' && auth()->id() === optional($event->organiser)->id)
               <div class="d-flex gap-2 justify-content-end mb-3">
                 <a href="{{ route('events.edit', $event) }}" class="btn btn-sm btn-primary"> Edit </a>
@@ -105,7 +105,7 @@
                 <a href="{{ route('waitlists.admin', $event) }}" class="btn btn-outline-secondary btn-sm">View Waitlist</a>
               </div>
          
-          <!-- Attendee Only (Book/Cancel/Waitlist buttons) -->
+          <!-- Attendee flows: confirmed, claim offer, normal booking, or waitlist -->
             @elseif (auth()->user()->type === 'attendee')    
               <!-- 1. User already booked -->
               @if ($isConfirmed)

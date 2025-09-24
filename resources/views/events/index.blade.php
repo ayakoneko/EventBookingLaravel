@@ -24,6 +24,7 @@
               <div> {{ $event->location }}</div>
             </div>
 
+            {{-- Stretched link for entire card click target --}}
             <a href="{{ route('events.show', $event) }}" class="stretched-link mt-auto"> Details </a>
 
           </div>
