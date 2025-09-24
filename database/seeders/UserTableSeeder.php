@@ -6,6 +6,14 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Seeds a minimal, predictable set of users for local/dev/testing.
+ *
+ * Creates two organisers for ownership and authorisation scenarios and two attendees for booking/waitlist flows. 
+ * Remaining users (eight attendees) is created via UserFactory.
+ * Passwords are uniform for convenience in demos and feature tests.
+ */
+
 class UserTableSeeder extends Seeder
 {
     /**
@@ -30,7 +38,7 @@ class UserTableSeeder extends Seeder
             'consented_at' => now(),
         ]);
 
-        // 10 attendees
+        // 10 attendees (2 prefilled, 8 from factory)
         User::factory()->create([
             'name' => 'Attendee One',
             'email' => 'aten1@example.test',

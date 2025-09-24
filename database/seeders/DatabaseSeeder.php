@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed users first so events can safely reference organisers via FK.
         $this->call([
             UserTableSeeder::class,
             EventTableSeeder::class,

@@ -6,20 +6,27 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+
 /**
+ * Factory for seeding User records.
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ *
+ * Defaults users to the "attendee" role with a verified email and 
+ * a uniform demo password to simplify local logins and feature tests.
  */
+
 class UserFactory extends Factory
 {
     /**
-     * The current password being used by the factory.
+     * The current hashed password being used by the factory.
      */
     protected static ?string $password;
 
     /**
      * Define the model's default state.
-     *
-     * @return array<string, mixed>
+     * Creates a verified attendee with fake() and 
+     * a convenient demo password and an immediate consent timestamp
+     * @return array<string,mixed> Attribute map for a default User.
      */
     public function definition(): array
     {

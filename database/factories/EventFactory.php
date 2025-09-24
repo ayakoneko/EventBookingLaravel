@@ -7,18 +7,26 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
+ * Factory for seeding Event records.
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
+ * 
+ * Uses a pool of titles/locations/images for realistic UI demos, 
+ * and generates future-dated schedules to populate "upcoming events" listings.
  */
+
 class EventFactory extends Factory
 {
     /**
      * Define the model's default state.
-     *
-     * @return array<string, mixed>
+     * @return array<string,mixed> Attribute map for a default Event.
+     * 
+     * Ensures each event has an organiser, future start/end times, and
+     * either in-person or online metadata. Pulls a preset for consistent
+     * visuals (e.g., stable images) in seeded environments.
      */
     public function definition(): array
     {   
-        //Event Pool for Title/Location/Image
+        //Event Pool for Title/Location/Image for consistent demo runs
         static $pool = null;
         if ($pool === null) {
             $pool = collect([
@@ -40,16 +48,18 @@ class EventFactory extends Factory
             ]);
         }
 
+        // Pull the next preset; if the pool empties, cycle to keep factories resilient.
         $preset = $pool->shift();
         $title = $preset['title'];
         $isOnline = $preset['is_online'];
 
+        // Ensure an organiser exists; prefer existing, otherwise create one on the fly.
         $organiserId = User::where('type', 'organiser')->inRandomOrder()->value('id')
             ?? User::factory()->organiser()->create()->id;
 
+        // Schedule: random future start between 1–60 days, on the hour or half-hour, 1–4h duration.
         $start = now()->addDays(fake()->numberBetween(1, 60))
                       ->setTime(fake()->numberBetween(9, 20), [0,30][rand(0,1)]);
-        
         $end   = (clone $start)->addHours(fake()->numberBetween(1, 4));
 
         return [
