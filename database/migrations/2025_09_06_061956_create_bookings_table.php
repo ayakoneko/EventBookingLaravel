@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->id();  // (PK)TicketNum
+            $table->id();  // (PK)BookingNum
             $table->foreignId('event_id')->constrained()->restrictOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unique(['event_id', 'user_id']);
 
-            $table->string('status', 20)->default('confirmed'); // confirmed|cancelled|waitlisted
+            $table->string('status', 20)->default('confirmed'); // confirmed|cancelled
             $table->dateTime('cancelled_at')->nullable();
             $table->string('ticket_code')->unique()->nullable();
             $table->text('notes')->nullable(); // dietary preference, etc.
