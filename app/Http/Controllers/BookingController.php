@@ -157,7 +157,7 @@ class BookingController extends Controller
             if ($first) {
                 $first->update([
                     'notified_at' => now(),
-                    'offer_expires_at' => now()->addHours(2)
+                    'offer_expires_at' => now()->addMinutes(10),
                 ]);    
 
                 Mail::to($first->user->email)->send(new WaitlistMail($first));

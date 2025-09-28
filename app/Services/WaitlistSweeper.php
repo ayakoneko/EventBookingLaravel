@@ -50,7 +50,7 @@ class WaitlistSweeper
         if ($next) {
             $next->update([
                 'notified_at'      => now(),
-                'offer_expires_at' => now()->addHours(2),
+                'offer_expires_at' => now()->addMinutes(10),
             ]);
 
             Mail::to($next->user->email)->send(new WaitlistMail($next));
