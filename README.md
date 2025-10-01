@@ -53,6 +53,21 @@ This system allows **Organisers** to create and manage events, while **Attendees
   - **Automated Notification:** When a booking is cancelled for a full event, the system automatically sends an email notification to the first attendee on the waitlist.  
       - Tested using `Mail::fake()` and demonstrated via Laravel’s log mailer.
 
+### 🏆 Custom Advanced Feature – Automatic Waitlist Expiry & Promotion System
+In addition to the basic waitlist notifications, this project implements a **scheduler-driven automated expiry and promotion process**:
+
+1. When an attendee is offered a spot from the waitlist, they must claim it within a fixed time window.  
+2. If the offer expires, their waitlist entry is moved to the **end of the queue** and all positions behind are compacted for fairness.  
+3. The **next eligible attendee** is automatically promoted and notified by email.  
+4. This sweep runs **periodically via Laravel’s scheduler**, ensuring the system operates continuously without manual intervention.  
+
+📌 **Note:** To demo/test this feature, run the Laravel scheduler in a terminal:  
+```bash
+php artisan schedule:work
+```
+
+This system improves the user experience by ensuring fairness, reducing organiser workload, and providing clear, automated handling of expired waitlist offers.
+
 ---
 
 ## 🧪 Automated Testing
@@ -72,11 +87,11 @@ Comprehensive **Feature Tests** implemented with **PHPUnit** and Laravel’s tes
 - **User Registration**
   - Cannot register without agreeing to Privacy Policy.
 - **Advanced Feature**
-  - Dedicated test suite for Event Categories:
-    - Assigning categories to events.
-    - Display and filtering by categories.
-    - AJAX filtering validation.
-    - Category flag highlighting.
+  - Can join a waitlist if an event is full. 
+  - Can view and leave their waitlists.
+  - Can view the waitlist for their events (restricted to the event owner).
+  - Cannot join waitlist if seats are available or if already booked/joined.
+  - Leaving waitlist compacts queue positions.
 
 ---
 
@@ -84,7 +99,7 @@ Comprehensive **Feature Tests** implemented with **PHPUnit** and Laravel’s tes
 
 - **Backend:** Laravel (PHP)  
 - **Database:** SQLite (Eloquent ORM + raw SQL for reporting)  
-- **Frontend:** Blade templates, Bootstrap, AJAX (for filtering)  
+- **Frontend:** Blade templates, Bootstrap
 - **Authentication:** Laravel Breeze / Auth scaffolding  
 - **Testing:** PHPUnit, Laravel Feature Tests  
 
@@ -113,5 +128,5 @@ DB_PASSWORD=secret
 # Run migrations and seeders
 php artisan migrate --seed
 
-# Serve the app
-php artisan serve
+# Run Laravel task scheduler
+php artisan schedule:work
